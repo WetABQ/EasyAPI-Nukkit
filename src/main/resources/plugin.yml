@@ -1,0 +1,8 @@
+name: EasyAPI
+main: top.wetabq.easyapi.EasyAPI
+version: "${pom.version}"
+api: ["1.0.0"]
+load: STARTUP
+author: WetABQ
+depend:
+  - "KotlinLib"
