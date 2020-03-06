@@ -17,6 +17,12 @@
         </license>
     </licenses>
 
+    <repositories>
+        <repository>
+            <id>nukkit-repo</id>
+            <url>https://repo.nukkitx.com/maven-snapshots</url>
+        </repository>
+    </repositories>
 
     <properties>
         <kotlin.version>1.3.70</kotlin.version>
