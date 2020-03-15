@@ -8,6 +8,7 @@ object EasyAPIModuleManager {
     private val modules = ConcurrentHashMap<ModuleInfo, EasyAPIModule>()
 
     fun register(module: EasyAPIModule) {
+        module.register(ModuleRegistry())
         modules[module.getModuleInfo()] = module
     }
 

@@ -6,31 +6,54 @@ import cn.nukkit.utils.ConfigSection
 
 abstract class EasyConfig(configName:String, plugin: Plugin) : IEasyConfig {
 
-    var config: Config = Config("${plugin.dataFolder}/$configName.yml", Config.YAML)
-    var configSection: ConfigSection
+    private var config: Config = Config("${plugin.dataFolder}/$configName.yml", Config.YAML)
+    private var configSection: ConfigSection
 
     init {
         this.configSection = config.rootSection
         init0()
     }
 
-    fun init0() {
+    private fun init0() {
         init()
     }
 
     override fun init() {
-        if (isEmpty()) spawnDefaultConfig()
+        if (isEmpty()) spawnDefaultConfig() else initFromConfigSecion(configSection)
     }
 
+    override fun spawnDefaultConfig() {
+        if (isEmpty()) {
+            spawnDefault(configSection)
+        }
+        init()
+        save()
+    }
 
     override fun save() {
-        if (isEmpty()) spawnDefaultConfig()
-        config.setAll(configSection)
-        config.save()
+        if (!isEmpty())  {
+            saveToConfigSection(configSection)
+            config.setAll(configSection)
+            config.save()
+        } else {
+            spawnDefaultConfig()
+        }
     }
 
-    fun isEmpty(): Boolean {
+    override fun reload() {
+        config.reload()
+        this.configSection = config.rootSection
+        init()
+    }
+
+    override fun isEmpty(): Boolean {
         return configSection.isEmpty()
     }
+
+    protected abstract fun initFromConfigSecion(configSection: ConfigSection)
+
+    protected abstract fun spawnDefault(configSection: ConfigSection)
+
+    protected abstract fun saveToConfigSection(configSection: ConfigSection)
 
 }

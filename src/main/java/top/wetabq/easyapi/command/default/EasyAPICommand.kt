@@ -6,7 +6,7 @@ import top.wetabq.easyapi.command.CommandArgument
 import top.wetabq.easyapi.command.EasyCommand
 import top.wetabq.easyapi.command.EasySubCommand
 
-class EasyAPICommand : EasyCommand("eapi", "EasyAPI Command") {
+object EasyAPICommand : EasyCommand("eapi", "EasyAPI Command") {
 
     init {
         subCommand.add(object: EasySubCommand("version") {

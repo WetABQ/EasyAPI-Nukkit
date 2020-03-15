@@ -10,4 +10,6 @@ interface IEasyConfig {
 
     fun reload()
 
+    fun isEmpty(): Boolean
+
 }
