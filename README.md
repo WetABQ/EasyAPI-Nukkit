@@ -1,5 +1,7 @@
 # EasyAPI-Nukkit
 
+WIP
+
 > Make creating plugin easier
 
 [简体中文](README_zh.md)
