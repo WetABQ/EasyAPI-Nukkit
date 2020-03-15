@@ -1,9 +1,9 @@
 package top.wetabq.easyapi.module.default
 
 import cn.nukkit.Server
+import cn.nukkit.event.Event
 import cn.nukkit.plugin.Plugin
 import cn.nukkit.scheduler.AsyncTask
-import jdk.jfr.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
