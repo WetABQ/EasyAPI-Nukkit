@@ -48,9 +48,6 @@ WIP
 
 - Economy
 
-- Database - DbLibX
-	- Auto async
-
 - GUI
 
 - Bottom Tip Management

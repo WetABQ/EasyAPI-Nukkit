@@ -4,8 +4,8 @@ import cn.nukkit.plugin.Plugin
 
 abstract class SimpleCodecEasyConfig<T>(
     configName:String,
-    plugin: Plugin,
-    clazzT: Class<T>,
+    val plugin: Plugin,
+    val clazzT: Class<T>,
     sectionName: String = "config",
     private val codec: AdvanceConfigCodec<T> = ReflectionConfigCodec(
         clazzT

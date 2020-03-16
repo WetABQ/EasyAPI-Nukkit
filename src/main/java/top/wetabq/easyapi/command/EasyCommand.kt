@@ -9,11 +9,13 @@ import java.util.HashMap
 
 abstract class EasyCommand(private val command: String, description: String = "Easy Command") : Command(command) {
 
-    companion object {
-        val subCommand = ArrayList<EasySubCommand>()
-    }
+    val subCommand = ArrayList<EasySubCommand>()
 
     init {
+        loadCommandBase()
+    }
+
+    fun loadCommandBase() {
         this.setDescription(description)
         this.setCommandParameters(object : HashMap<String, Array<CommandParameter>>() {
             init {

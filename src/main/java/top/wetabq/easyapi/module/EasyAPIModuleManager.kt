@@ -1,5 +1,6 @@
 package top.wetabq.easyapi.module
 
+import top.wetabq.easyapi.api.DisableNotRemoveAll
 import top.wetabq.easyapi.module.default.CharFormatModule
 import java.util.concurrent.ConcurrentHashMap
 
@@ -19,7 +20,7 @@ object EasyAPIModuleManager {
     fun disable(module: EasyAPIModule) {
         module.disable()
         module.getModuleRegistry().getAllIntegrateAPI().forEach { api ->
-            api.removeAll()
+            if (!api.javaClass.isAnnotationPresent(DisableNotRemoveAll::class.java)) api.removeAll()
         }
     }
 
