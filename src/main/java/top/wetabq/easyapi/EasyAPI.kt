@@ -8,7 +8,7 @@ import top.wetabq.easyapi.utils.color
 object EasyAPI : PluginBase() {
 
 
-    val TITLE = "&c[&eEasy&aAPI&c]".color()
+    var TITLE = "&c[&eEasy&aAPI&c]".color()
 
     val VERSION: String = this.description.version
 

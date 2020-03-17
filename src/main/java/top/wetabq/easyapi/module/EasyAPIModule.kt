@@ -1,16 +1,18 @@
 package top.wetabq.easyapi.module
 
-interface EasyAPIModule {
+import top.wetabq.easyapi.api.DynamicIntegrateAPI
 
-    fun getModuleInfo(): ModuleInfo
+abstract class EasyAPIModule: IEasyAPIModule {
 
-    fun getModuleRegistry(): ModuleRegistry
+    private val integrateAPIs = HashMap<String, DynamicIntegrateAPI<*, *>>()
 
-    fun getModuleStatus(): ModuleStatus
+    override fun <I: DynamicIntegrateAPI<*, *>> registerAPI(identifier: String, integrateAPI: I): I {
+        integrateAPIs[identifier] = integrateAPI
+        return integrateAPI
+    }
 
-    fun register(registry: ModuleRegistry)
+    override fun getIntegrateAPI(identifier: String): DynamicIntegrateAPI<*, *>? = integrateAPIs[identifier]
 
-    fun disable()
-
+    override fun getAllIntegrateAPI(): Collection<DynamicIntegrateAPI<*, *>> = integrateAPIs.values
 
 }

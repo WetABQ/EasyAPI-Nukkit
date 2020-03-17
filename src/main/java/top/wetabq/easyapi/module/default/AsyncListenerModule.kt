@@ -34,11 +34,22 @@ fun <T: Event> asyncTaskCallEvent(event: T, plugin: Plugin, syncAction: (T) -> U
 
 object AsyncListenerModule: SimpleEasyAPIModule() {
 
+    const val MODULE_NAME = "AsyncListenerModule"
+    const val AUTHOR = "WetABQ"
+
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
         EasyAPI,
-        "AsyncListenerModule",
-        "WetABQ",
+        MODULE_NAME,
+        AUTHOR,
         ModuleVersion(1, 0 ,0)
     )
+
+    override fun moduleRegister() {
+
+    }
+
+    override fun moduleDisable() {
+
+    }
 
 }

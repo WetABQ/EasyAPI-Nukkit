@@ -19,14 +19,22 @@ object SimpleConfig : CodecEasyConfig<Any>(
      * @param plugin your plugin
      */
     fun addPath(path: String, plugin: Plugin, defaultValue: Any) {
-        simpleConfig[getPath(path, plugin)] = defaultValue
+        if (!simpleConfig.containsKey(getPath(path, plugin))) {
+            setPathValue(path, plugin, defaultValue)
+        }
     }
 
     fun removePath(path: String, plugin: Plugin) {
         simpleConfig.remove(getPath(path, plugin))
     }
 
+    fun setPathValue(path: String, plugin: Plugin, value: Any) {
+        simpleConfig[getPath(path, plugin)] = value
+    }
+
     fun getPathValue(path: String, plugin: Plugin): Any? = simpleConfig[getPath(path, plugin)]
+
+    fun directlyGetPathValue(path: String): Any? = simpleConfig[path]
 
     fun getPath(path: String, plugin: Plugin) : String = plugin.description.name + path
 

@@ -7,6 +7,7 @@ class CompatibilityCheck(private val providers: List<String>) {
     private var finalKey = ""
 
     fun check() {
+        // TODO: Check server started
         providers.forEach { plugin ->
             if (Server.getInstance().pluginManager.getPlugin(plugin) != null) {
                 finalKey = plugin

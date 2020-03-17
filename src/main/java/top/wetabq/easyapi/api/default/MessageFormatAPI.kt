@@ -4,7 +4,7 @@ import top.wetabq.easyapi.api.SimpleIntegrateAPI
 
 object MessageFormatAPI: SimpleIntegrateAPI {
 
-    val formatters = hashMapOf<Class<*>, MessageFormatter<*>>()
+    private val formatters = hashMapOf<Class<*>, MessageFormatter<*>>()
 
     fun format(message: String, vararg data: Any): String {
         var msg = message
@@ -12,6 +12,10 @@ object MessageFormatAPI: SimpleIntegrateAPI {
             msg = formatters[it.javaClass]?.parseFormat(message, it)?:msg
         }
         return msg
+    }
+
+    fun <T> registerFormatter(formatter: MessageFormatter<T>, clazz: Class<T>) {
+        formatters[clazz] = formatter
     }
 
 }

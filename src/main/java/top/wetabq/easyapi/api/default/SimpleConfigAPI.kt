@@ -1,27 +1,42 @@
 package top.wetabq.easyapi.api.default
 
+import cn.nukkit.plugin.Plugin
 import top.wetabq.easyapi.api.DisableNotRemoveAll
 import top.wetabq.easyapi.api.DynamicIntegrateAPI
 import top.wetabq.easyapi.config.default.SimpleConfig
 import top.wetabq.easyapi.config.default.SimpleConfigEntry
-import top.wetabq.easyapi.module.EasyAPIModule
-import top.wetabq.easyapi.module.ModuleRegistry
 
 @DisableNotRemoveAll
-class SimpleConfigAPI(private val module: EasyAPIModule): DynamicIntegrateAPI<SimpleConfigEntry<*>> {
+class SimpleConfigAPI(private val plugin: Plugin): DynamicIntegrateAPI<SimpleConfigEntry<*>, SimpleConfigAPI> {
 
     private val simpleConfigEntryList = arrayListOf<SimpleConfigEntry<*>>()
 
-    override fun add(t: SimpleConfigEntry<*>): ModuleRegistry {
-        SimpleConfig.addPath(t.path, module.getModuleInfo().moduleOwner, t.value?:"")
+    override fun add(t: SimpleConfigEntry<*>): SimpleConfigAPI {
+        SimpleConfig.addPath(t.path, plugin, t.value?:"")
         SimpleConfig.save()
-        return module.getModuleRegistry()
+        return this
     }
 
-    override fun remove(t: SimpleConfigEntry<*>): ModuleRegistry {
-        SimpleConfig.removePath(t.path, module.getModuleInfo().moduleOwner)
+    override fun remove(t: SimpleConfigEntry<*>): SimpleConfigAPI {
+        SimpleConfig.removePath(t.path, plugin)
         SimpleConfig.save()
-        return module.getModuleRegistry()
+        return this
+    }
+
+    fun getPath(path: String): String {
+        return SimpleConfig.getPath(path, plugin)
+    }
+
+    fun getPathValue(path: String): Any? {
+        return SimpleConfig.getPathValue(path, plugin)
+    }
+
+    fun directlyGetPathValue(path: String): Any? {
+        return SimpleConfig.directlyGetPathValue(path)
+    }
+
+    fun setPathValue(key: SimpleConfigEntry<*>) {
+        SimpleConfig.setPathValue(key.path, plugin, key.value?:"")
     }
 
     override fun getAll(): Collection<SimpleConfigEntry<*>> = simpleConfigEntryList

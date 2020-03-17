@@ -2,21 +2,19 @@ package top.wetabq.easyapi.api.default
 
 import top.wetabq.easyapi.api.DynamicIntegrateAPI
 import top.wetabq.easyapi.config.EasyConfig
-import top.wetabq.easyapi.module.EasyAPIModule
-import top.wetabq.easyapi.module.ModuleRegistry
 
-class ConfigAPI(private val module: EasyAPIModule): DynamicIntegrateAPI<EasyConfig> {
+class ConfigAPI: DynamicIntegrateAPI<EasyConfig, ConfigAPI> {
 
     private val configList = arrayListOf<EasyConfig>()
 
-    override fun add(t: EasyConfig): ModuleRegistry {
+    override fun add(t: EasyConfig): ConfigAPI {
         configList.add(t)
-        return module.getModuleRegistry()
+        return this
     }
 
-    override fun remove(t: EasyConfig): ModuleRegistry {
+    override fun remove(t: EasyConfig): ConfigAPI {
         t.save()
-        return module.getModuleRegistry()
+        return this
     }
 
     override fun getAll(): Collection<EasyConfig> = configList

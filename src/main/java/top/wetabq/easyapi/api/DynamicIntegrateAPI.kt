@@ -1,13 +1,10 @@
 package top.wetabq.easyapi.api
 
-import top.wetabq.easyapi.module.ModuleRegistry
+interface DynamicIntegrateAPI<T, out I: DynamicIntegrateAPI<*, I>> {
 
+    fun add(t: T): I
 
-interface DynamicIntegrateAPI<T> {
-
-    fun add(t: T): ModuleRegistry
-
-    fun remove(t: T): ModuleRegistry
+    fun remove(t: T): I
 
     fun getAll(): Collection<T>
 

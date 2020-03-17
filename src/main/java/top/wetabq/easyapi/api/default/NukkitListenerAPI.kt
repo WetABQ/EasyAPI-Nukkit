@@ -4,24 +4,23 @@ import cn.nukkit.Server
 import cn.nukkit.event.Event
 import cn.nukkit.event.HandlerList
 import cn.nukkit.event.Listener
+import cn.nukkit.plugin.Plugin
 import cn.nukkit.utils.Utils
 import top.wetabq.easyapi.api.DynamicIntegrateAPI
-import top.wetabq.easyapi.module.EasyAPIModule
-import top.wetabq.easyapi.module.ModuleRegistry
 import java.lang.reflect.Method
 import java.util.*
 
-class NukkitListenerAPI(private val module: EasyAPIModule) : DynamicIntegrateAPI<Listener> {
+class NukkitListenerAPI(private val plugin: Plugin) : DynamicIntegrateAPI<Listener, NukkitListenerAPI> {
 
     private val listeners = arrayListOf<Listener>()
 
-    override fun add(t: Listener): ModuleRegistry {
+    override fun add(t: Listener): NukkitListenerAPI {
         listeners.add(t)
-        Server.getInstance().pluginManager.registerEvents(t, module.getModuleInfo().moduleOwner)
-        return module.getModuleRegistry()
+        Server.getInstance().pluginManager.registerEvents(t, plugin)
+        return this
     }
 
-    override fun remove(t: Listener): ModuleRegistry {
+    override fun remove(t: Listener): NukkitListenerAPI {
         var methods: Set<Method> = setOf()
         try {
             val publicMethods: Array<Method> = t.javaClass.methods
@@ -50,7 +49,7 @@ class NukkitListenerAPI(private val module: EasyAPIModule) : DynamicIntegrateAPI
             }
             this.getEventListeners(eventClass).unregister(t)
         }
-        return module.getModuleRegistry()
+        return this
     }
 
     @Throws(IllegalAccessException::class)

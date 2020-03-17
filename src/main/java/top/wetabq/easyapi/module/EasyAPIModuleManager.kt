@@ -2,29 +2,29 @@ package top.wetabq.easyapi.module
 
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.DisableNotRemoveAll
-import top.wetabq.easyapi.module.default.CharFormatModule
-import top.wetabq.easyapi.module.default.EasyModule
+import top.wetabq.easyapi.module.default.ChatNameTagFormatModule
+import top.wetabq.easyapi.module.default.EasyBaseModule
 import java.util.concurrent.ConcurrentHashMap
 
 object EasyAPIModuleManager {
 
-    private val modules = ConcurrentHashMap<ModuleInfo, EasyAPIModule>()
+    private val modules = ConcurrentHashMap<ModuleInfo, IEasyAPIModule>()
 
-    fun register(module: EasyAPIModule) {
-        module.register(ModuleRegistry())
+    fun register(module: IEasyAPIModule) {
+        module.register()
         modules[module.getModuleInfo()] = module
         val info = module.getModuleInfo()
         EasyAPI.logger.info("Module ${info.name}_${info.moduleVersion} from ${info.moduleOwner.name} by ${info.author} loaded")
     }
 
     fun registerDefault() {
-        register(EasyModule)
-        register(CharFormatModule)
+        register(EasyBaseModule)
+        register(ChatNameTagFormatModule)
     }
 
-    fun disable(module: EasyAPIModule) {
+    fun disable(module: IEasyAPIModule) {
         module.disable()
-        module.getModuleRegistry().getAllIntegrateAPI().forEach { api ->
+        module.getAllIntegrateAPI().forEach { api ->
             if (!api.javaClass.isAnnotationPresent(DisableNotRemoveAll::class.java)) api.removeAll()
         }
     }
@@ -36,7 +36,7 @@ object EasyAPIModuleManager {
         }
     }
 
-    fun getModule(moduleInfo: ModuleInfo) : EasyAPIModule? = modules[moduleInfo]
+    fun getModule(moduleInfo: ModuleInfo) : IEasyAPIModule? = modules[moduleInfo]
 
 
 
