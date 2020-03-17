@@ -23,7 +23,7 @@ object EasyAPICommand : EasyCommand("eapi", "EasyAPI Command") {
             }
 
             override fun execute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
-                sender.sendMessage("${EasyAPI.TITLE}EasyAPI - ${EasyAPI.VERSION} by WetABQ\n" +
+                sender.sendMessage("${EasyAPI.TITLE}EasyAPI - ${EasyAPI.VERSION} - ${EasyAPI.GIT_VERSION} by WetABQ\n" +
                         "If you have any questions, please feel free to send us feedback to our email wetabq@gmail.com")
                 return true
             }
