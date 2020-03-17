@@ -28,7 +28,7 @@ object EconomyAPI : SimpleIntegrateAPI {
         ))
     }
 
-    fun reducuMoney(player: Player, amount: Double) {
+    fun reduceMoney(player: Player, amount: Double) {
         compatibilityCheck.doCompatibilityAction(mapOf(
             ECONOMY_API to {
                 EconomyAPI.getInstance().reduceMoney(player, amount)
