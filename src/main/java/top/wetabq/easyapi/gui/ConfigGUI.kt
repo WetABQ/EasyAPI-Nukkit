@@ -10,6 +10,9 @@ import top.wetabq.easyapi.config.encoder.advance.SimpleCodecEasyConfig
 import top.wetabq.easyapi.utils.color
 import kotlin.math.min
 
+/**
+ * WARN: Use the lib gui.jar by Him188
+ */
 class ConfigGUI<T>(private val simpleCodecEasyConfig: SimpleCodecEasyConfig<T>, obj: T, key: String, guiTitle: String = "",  parent: FormWindow? = null) : ResponsibleFormWindowCustom(guiTitle) {
 
     init {
@@ -24,6 +27,7 @@ class ConfigGUI<T>(private val simpleCodecEasyConfig: SimpleCodecEasyConfig<T>, 
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     override fun onClicked(response: FormResponseCustom, player: Player) {
         response.responses[0]?.let { id ->
             val params = arrayListOf<Any>()

@@ -44,8 +44,6 @@ WIP
 
 - Config
 
-- Rsweapon
-
 - Economy
 
 - GUI

@@ -20,6 +20,10 @@ object PermissionGroupAPI : SimpleIntegrateAPI {
         MULTI_PASS
     ))
 
+    init {
+        EconomyAPI.compatibilityCheck.check()
+    }
+
 
     fun addPlayerToGroup(player: String, groupName: String) {
         compatibilityCheck.doCompatibilityAction(mapOf(

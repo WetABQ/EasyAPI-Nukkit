@@ -4,18 +4,33 @@ import top.wetabq.easyapi.api.SimpleIntegrateAPI
 
 object MessageFormatAPI: SimpleIntegrateAPI {
 
-    private val formatters = hashMapOf<Class<*>, MessageFormatter<*>>()
+    private val formatters = hashMapOf<String, HashMap<Class<*>, MessageFormatter<*>>>()
+    private val simpleFormatters = arrayListOf<SimpleMessageFormatter>()
 
     fun format(message: String, vararg data: Any): String {
         var msg = message
         data.forEach {
-            msg = formatters[it.javaClass]?.parseFormat(message, it)?:msg
+            formatters.forEach { (_, fs) ->
+                msg = fs[it.javaClass]?.parseFormat(message, it)?:msg
+            }
+        }
+        simpleFormatters.forEach {
+            msg = it.format(msg)
         }
         return msg
     }
 
-    fun <T> registerFormatter(formatter: MessageFormatter<T>, clazz: Class<T>) {
-        formatters[clazz] = formatter
+    fun <T> registerFormatter(identifier: String, clazz: Class<T>, formatter: MessageFormatter<T>) {
+        if (!formatters.containsKey(identifier)) {
+            formatters[identifier] = hashMapOf()
+        }
+        formatters[identifier]?.let {
+            it[clazz] = formatter
+        }
+    }
+
+    fun registerSimpleFormatter(formatter: SimpleMessageFormatter) {
+        simpleFormatters.add(formatter)
     }
 
 }
@@ -30,5 +45,11 @@ interface MessageFormatter<T> {
     }
 
     fun format(message: String, data: T): String
+
+}
+
+interface SimpleMessageFormatter {
+
+    fun format(message: String): String
 
 }

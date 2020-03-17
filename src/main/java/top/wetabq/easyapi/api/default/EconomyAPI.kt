@@ -12,6 +12,10 @@ object EconomyAPI : SimpleIntegrateAPI {
 
     val compatibilityCheck = CompatibilityCheck(listOf(ECONOMY_API))
 
+    init {
+        compatibilityCheck.check()
+    }
+
     fun getMoney(player: Player): Double? {
         return compatibilityCheck.doCompatibilityAction(mapOf(
             ECONOMY_API to {

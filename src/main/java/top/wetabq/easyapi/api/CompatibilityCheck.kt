@@ -28,4 +28,6 @@ class CompatibilityCheck(private val providers: List<String>) {
         return finalValue
     }
 
+    fun isCompatible(): Boolean = (finalKey != "")
+
 }

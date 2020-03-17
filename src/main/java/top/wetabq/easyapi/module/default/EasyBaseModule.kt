@@ -36,11 +36,10 @@ object EasyBaseModule: SimpleEasyAPIModule() {
             .add(EasyAPICommand)
         this.registerAPI(SIMPLE_CONFIG, ConfigAPI())
             .add(SimpleConfig)
-        this.registerAPI(EASY_API_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
+        val easyAPIConfig = this.registerAPI(EASY_API_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
             .add(SimpleConfigEntry(TITLE_PATH, "&c[&eEasy&aAPI&c]".color()))
-        (this.getIntegrateAPI(EASY_API_CONFIG) as? SimpleConfigAPI)?.let {
-            EasyAPI.TITLE = it.getPathValue(TITLE_PATH) as String
-        }
+
+        EasyAPI.TITLE = easyAPIConfig.getPathValue(TITLE_PATH) as String
 
     }
 
