@@ -20,4 +20,8 @@ object EasyAPI : PluginBase() {
         //logger.info("EasyAPI by WetABQ Enabled...")
     }
 
+    override fun onDisable() {
+        moduleManager.disableAll()
+    }
+
 }

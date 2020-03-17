@@ -1,6 +1,6 @@
 package top.wetabq.easyapi.config.encoder.advance
 
-
+@Suppress("UNCHECKED_CAST")
 class ReflectionConfigCodec<T>(private val clazz: Class<T>) :
     AdvanceConfigCodec<T> {
 

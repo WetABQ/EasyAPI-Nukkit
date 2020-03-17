@@ -11,6 +11,7 @@ abstract class AdvanceCodecEasyConfig<T>(
 ) : CodecEasyConfig<T>(configName, plugin, sectionName),
     AdvanceConfigCodec<T> {
 
+    @Suppress("UNCHECKED_CAST")
     override fun initFromConfigSecion(configSection: ConfigSection) {
         (configSection[sectionName] as LinkedHashMap<String, LinkedHashMap<String, *>>).forEach { (s, any) ->
             simpleConfig[s] = decode(any)

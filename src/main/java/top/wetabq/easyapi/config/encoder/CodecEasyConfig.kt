@@ -12,6 +12,7 @@ abstract class CodecEasyConfig<T>(
 
     var simpleConfig = LinkedHashMap<String,T>()
 
+    @Suppress("UNCHECKED_CAST")
     override fun initFromConfigSecion(configSection: ConfigSection) {
         (configSection[sectionName] as LinkedHashMap<String, Any>).forEach { (s, any) ->
             simpleConfig[s] = decode(any)
