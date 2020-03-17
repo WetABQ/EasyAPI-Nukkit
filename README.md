@@ -1,6 +1,6 @@
 # EasyAPI-Nukkit
 
-WIP
+**High-speed iteration**
 
 > Make creating plugin easier
 

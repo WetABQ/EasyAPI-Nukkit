@@ -16,4 +16,6 @@ abstract class SimpleCodecEasyConfig<T>(
 
     override fun decode(map: LinkedHashMap<String, *>): T = codec.decode(map)
 
+    override fun decode(any: Any): T = codec.decode(any)
+
 }

@@ -14,7 +14,7 @@ class ReflectionConfigCodec<T>(private val clazz: Class<T>) :
     }
 
     override fun decode(any: Any): T {
-        return if (any is LinkedHashMap<*, *>) decode(any) else any as T
+        return if (any is LinkedHashMap<*, *>) decode(any as LinkedHashMap<String, *>) else any as T
     }
 
     private fun reflectEncode(obj: Any, clazz: Class<out Any>): LinkedHashMap<String, *> {
