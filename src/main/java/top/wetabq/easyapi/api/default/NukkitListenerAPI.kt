@@ -6,21 +6,18 @@ import cn.nukkit.event.HandlerList
 import cn.nukkit.event.Listener
 import cn.nukkit.plugin.Plugin
 import cn.nukkit.utils.Utils
-import top.wetabq.easyapi.api.DynamicIntegrateAPI
+import top.wetabq.easyapi.api.CommonDynamicIntegrateAPI
 import java.lang.reflect.Method
 import java.util.*
 
-class NukkitListenerAPI(private val plugin: Plugin) : DynamicIntegrateAPI<Listener, NukkitListenerAPI> {
+class NukkitListenerAPI(private val plugin: Plugin) : CommonDynamicIntegrateAPI<Listener, NukkitListenerAPI>() {
 
-    private val listeners = arrayListOf<Listener>()
-
-    override fun add(t: Listener): NukkitListenerAPI {
-        listeners.add(t)
+    override fun addInterface(t: Listener): NukkitListenerAPI {
         Server.getInstance().pluginManager.registerEvents(t, plugin)
         return this
     }
 
-    override fun remove(t: Listener): NukkitListenerAPI {
+    override fun removeInterface(t: Listener): NukkitListenerAPI {
         var methods: Set<Method> = setOf()
         try {
             val publicMethods: Array<Method> = t.javaClass.methods
@@ -80,11 +77,5 @@ class NukkitListenerAPI(private val plugin: Plugin) : DynamicIntegrateAPI<Listen
             }
         }
     }
-
-    override fun removeAll() {
-        listeners.forEach { t -> remove(t) }
-    }
-
-    override fun getAll() : Collection<Listener> = listeners
 
 }

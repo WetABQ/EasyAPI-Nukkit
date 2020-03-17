@@ -1,13 +1,16 @@
 package top.wetabq.easyapi.module.default
 
 import cn.nukkit.Player
+import cn.nukkit.scheduler.PluginTask
 import cn.nukkit.utils.TextFormat
 import top.wetabq.easyapi.EasyAPI
+import top.wetabq.easyapi.api.default.PluginTaskAPI
 import top.wetabq.easyapi.module.ModuleInfo
 import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule
 import top.wetabq.easyapi.screen.ScreenShow
 import top.wetabq.easyapi.screen.ShowType
+import top.wetabq.easyapi.task.PluginTaskEntry
 import kotlin.math.floor
 
 object ScreenShowModule : SimpleEasyAPIModule() {
@@ -27,6 +30,8 @@ object ScreenShowModule : SimpleEasyAPIModule() {
     private val screenShowList = arrayListOf<ScreenShow>()
     private val alternateList = arrayListOf<ScreenShow>()
 
+    const val SHOW_TASK = "showTask"
+
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
         EasyAPI,
         EasyBaseModule.MODULE_NAME,
@@ -35,11 +40,22 @@ object ScreenShowModule : SimpleEasyAPIModule() {
     )
 
     override fun moduleRegister() {
+        this.registerAPI(SHOW_TASK, PluginTaskAPI<EasyAPI>(EasyAPI))
+            .add(PluginTaskEntry(
+                object : PluginTask<EasyAPI>(EasyAPI) {
 
+                    override fun onRun(p0: Int) {
+                        sendAll()
+                    }
+
+                },
+                5
+                ))
     }
 
     override fun moduleDisable() {
-
+        screenShowList.clear()
+        alternateList.clear()
     }
 
     /*

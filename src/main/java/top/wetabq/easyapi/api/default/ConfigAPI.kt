@@ -1,26 +1,18 @@
 package top.wetabq.easyapi.api.default
 
-import top.wetabq.easyapi.api.DynamicIntegrateAPI
+import top.wetabq.easyapi.api.CommonDynamicIntegrateAPI
 import top.wetabq.easyapi.config.EasyConfig
 
-class ConfigAPI: DynamicIntegrateAPI<EasyConfig, ConfigAPI> {
+class ConfigAPI: CommonDynamicIntegrateAPI<EasyConfig, ConfigAPI>() {
 
-    private val configList = arrayListOf<EasyConfig>()
 
-    override fun add(t: EasyConfig): ConfigAPI {
-        configList.add(t)
+    override fun addInterface(t: EasyConfig): ConfigAPI {
         return this
     }
 
-    override fun remove(t: EasyConfig): ConfigAPI {
+    override fun removeInterface(t: EasyConfig): ConfigAPI {
         t.save()
         return this
-    }
-
-    override fun getAll(): Collection<EasyConfig> = configList
-
-    override fun removeAll() {
-        configList.forEach { t -> remove(t) }
     }
 
 }
