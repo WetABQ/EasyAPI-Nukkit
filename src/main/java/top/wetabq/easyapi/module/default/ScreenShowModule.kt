@@ -33,16 +33,16 @@ object ScreenShowModule : SimpleEasyAPIModule() {
     const val SHOW_TASK = "showTask"
 
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
-        EasyAPI,
+        EasyAPI.INSTANCE,
         EasyBaseModule.MODULE_NAME,
         EasyBaseModule.AUTHOR,
         ModuleVersion(1,0,0)
     )
 
     override fun moduleRegister() {
-        this.registerAPI(SHOW_TASK, PluginTaskAPI<EasyAPI>(EasyAPI))
+        this.registerAPI(SHOW_TASK, PluginTaskAPI<EasyAPI>(EasyAPI.INSTANCE))
             .add(PluginTaskEntry(
-                object : PluginTask<EasyAPI>(EasyAPI) {
+                object : PluginTask<EasyAPI>(EasyAPI.INSTANCE) {
 
                     override fun onRun(p0: Int) {
                         sendAll()

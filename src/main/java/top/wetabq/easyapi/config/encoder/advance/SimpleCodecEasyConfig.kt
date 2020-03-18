@@ -6,11 +6,10 @@ abstract class SimpleCodecEasyConfig<T>(
     configName:String,
     val plugin: Plugin,
     val clazzT: Class<T>,
-    sectionName: String = "config",
     private val codec: AdvanceConfigCodec<T> = ReflectionConfigCodec(
         clazzT
     )
-) : AdvanceCodecEasyConfig<T>(configName, plugin, sectionName) {
+) : AdvanceCodecEasyConfig<T>(configName, plugin) {
 
     override fun encode(obj: T): LinkedHashMap<String, *> = codec.encode(obj)
 

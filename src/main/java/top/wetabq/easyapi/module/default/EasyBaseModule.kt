@@ -24,7 +24,7 @@ object EasyBaseModule: SimpleEasyAPIModule() {
     const val TITLE_PATH = "title"
 
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
-        EasyAPI,
+        EasyAPI.INSTANCE,
         MODULE_NAME,
         AUTHOR,
         ModuleVersion(1,0,0)

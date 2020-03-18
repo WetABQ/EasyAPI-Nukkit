@@ -6,8 +6,7 @@ import top.wetabq.easyapi.config.encoder.CodecEasyConfig
 
 object SimpleConfig : CodecEasyConfig<Any>(
     "integrateConfig",
-    EasyAPI,
-    "integrateConfig") {
+    EasyAPI.INSTANCE) {
 
     override fun encode(obj: Any): String = obj.toString()
 

@@ -37,7 +37,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
     const val CHAT_FORMATTER = "chatFormatter"
 
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
-        EasyAPI,
+        EasyAPI.INSTANCE,
         MODULE_NAME,
         AUTHOR,
         ModuleVersion(1, 0, 0)

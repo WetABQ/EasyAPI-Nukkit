@@ -37,7 +37,7 @@ object AsyncListenerModule: SimpleEasyAPIModule() {
     const val AUTHOR = "WetABQ"
 
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
-        EasyAPI,
+        EasyAPI.INSTANCE,
         MODULE_NAME,
         AUTHOR,
         ModuleVersion(1, 0 ,0)

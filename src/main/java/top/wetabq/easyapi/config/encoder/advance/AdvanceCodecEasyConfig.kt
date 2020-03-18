@@ -6,9 +6,8 @@ import top.wetabq.easyapi.config.encoder.CodecEasyConfig
 
 abstract class AdvanceCodecEasyConfig<T>(
     configName:String,
-    plugin: Plugin,
-    private val sectionName: String = "config"
-) : CodecEasyConfig<T>(configName, plugin, sectionName),
+    plugin: Plugin
+) : CodecEasyConfig<T>(configName, plugin),
     AdvanceConfigCodec<T> {
 
     @Suppress("UNCHECKED_CAST")

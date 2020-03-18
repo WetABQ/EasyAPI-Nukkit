@@ -6,11 +6,11 @@ import top.wetabq.easyapi.config.EasyConfig
 
 abstract class CodecEasyConfig<T>(
     configName:String,
-    plugin: Plugin,
-    private val sectionName: String = "config"
+    plugin: Plugin
 ) : EasyConfig(configName, plugin), ConfigCodec<T> {
 
-    var simpleConfig = LinkedHashMap<String,T>()
+    var simpleConfig = linkedMapOf<String,T>()
+    var sectionName = "config"
 
     @Suppress("UNCHECKED_CAST")
     override fun initFromConfigSecion(configSection: ConfigSection) {
@@ -20,6 +20,8 @@ abstract class CodecEasyConfig<T>(
     }
 
     override fun spawnDefault(configSection: ConfigSection) {
+        simpleConfig = linkedMapOf()
+        sectionName = "config"
         configSection[sectionName] = simpleConfig
     }
 

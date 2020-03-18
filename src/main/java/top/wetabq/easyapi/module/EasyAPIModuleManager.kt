@@ -16,7 +16,7 @@ object EasyAPIModuleManager {
         module.register()
         modules[module.getModuleInfo()] = module
         val info = module.getModuleInfo()
-        EasyAPI.logger.info("Module ${info.name}_${info.moduleVersion} from ${info.moduleOwner.name} by ${info.author} loaded")
+        EasyAPI.INSTANCE.logger.info("Module ${info.name}_${info.moduleVersion} from ${info.moduleOwner.name} by ${info.author} loaded")
     }
 
     fun registerDefault() {
@@ -36,7 +36,7 @@ object EasyAPIModuleManager {
     fun disableAll() {
         modules.forEach { (info, module) ->
             disable(module)
-            EasyAPI.logger.warning("Module ${info.name}_${info.moduleVersion} from ${info.moduleOwner.name} by ${info.author} disabled")
+            EasyAPI.INSTANCE.logger.warning("Module ${info.name}_${info.moduleVersion} from ${info.moduleOwner.name} by ${info.author} disabled")
         }
     }
 
