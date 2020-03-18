@@ -4,9 +4,9 @@ import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.defaults.CommandAPI
 import top.wetabq.easyapi.api.defaults.ConfigAPI
 import top.wetabq.easyapi.api.defaults.SimpleConfigAPI
-import top.wetabq.easyapi.command.default.EasyAPICommand
-import top.wetabq.easyapi.config.default.SimpleConfig
-import top.wetabq.easyapi.config.default.SimpleConfigEntry
+import top.wetabq.easyapi.command.defaults.EasyAPICommand
+import top.wetabq.easyapi.config.defaults.SimpleConfig
+import top.wetabq.easyapi.config.defaults.SimpleConfigEntry
 import top.wetabq.easyapi.module.ModuleInfo
 import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule

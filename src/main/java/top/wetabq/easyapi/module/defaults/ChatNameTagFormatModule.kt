@@ -9,7 +9,7 @@ import cn.nukkit.event.player.PlayerJoinEvent
 import cn.nukkit.event.player.PlayerRespawnEvent
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.defaults.*
-import top.wetabq.easyapi.config.default.SimpleConfigEntry
+import top.wetabq.easyapi.config.defaults.SimpleConfigEntry
 import top.wetabq.easyapi.module.ModuleInfo
 import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule

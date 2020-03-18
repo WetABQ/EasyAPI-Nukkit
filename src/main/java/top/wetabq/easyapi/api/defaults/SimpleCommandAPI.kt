@@ -2,7 +2,7 @@ package top.wetabq.easyapi.api.defaults
 
 import top.wetabq.easyapi.api.CommonDynamicIntegrateAPI
 import top.wetabq.easyapi.command.EasySubCommand
-import top.wetabq.easyapi.command.default.EasyAPICommand
+import top.wetabq.easyapi.command.defaults.EasyAPICommand
 
 /**
  * Use EasyAPIModule build-in command to add sub-command

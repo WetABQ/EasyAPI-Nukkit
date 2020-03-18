@@ -1,4 +1,4 @@
-package top.wetabq.easyapi.config.default
+package top.wetabq.easyapi.config.defaults
 
 import cn.nukkit.plugin.Plugin
 import top.wetabq.easyapi.EasyAPI

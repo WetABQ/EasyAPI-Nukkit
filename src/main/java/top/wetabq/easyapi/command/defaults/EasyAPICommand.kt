@@ -1,4 +1,4 @@
-package top.wetabq.easyapi.command.default
+package top.wetabq.easyapi.command.defaults
 
 import cn.nukkit.command.CommandSender
 import top.wetabq.easyapi.EasyAPI

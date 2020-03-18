@@ -3,8 +3,8 @@ package top.wetabq.easyapi.api.defaults
 import cn.nukkit.plugin.Plugin
 import top.wetabq.easyapi.api.CommonDynamicIntegrateAPI
 import top.wetabq.easyapi.api.DisableNotRemoveAll
-import top.wetabq.easyapi.config.default.SimpleConfig
-import top.wetabq.easyapi.config.default.SimpleConfigEntry
+import top.wetabq.easyapi.config.defaults.SimpleConfig
+import top.wetabq.easyapi.config.defaults.SimpleConfigEntry
 
 @DisableNotRemoveAll
 class SimpleConfigAPI(private val plugin: Plugin): CommonDynamicIntegrateAPI<SimpleConfigEntry<*>, SimpleConfigAPI>() {
