@@ -1,7 +1,6 @@
 package top.wetabq.easyapi.module.default
 
 import cn.nukkit.Player
-import cn.nukkit.Server
 import cn.nukkit.event.EventHandler
 import cn.nukkit.event.Listener
 import cn.nukkit.event.player.PlayerChatEvent
@@ -56,7 +55,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
             override fun format(message: String, data: String): String {
                 //IF data IS PLAYER NAME
                 var final = message
-                if (Server.getInstance().getPlayer(data) is Player) {
+                if (EasyAPI.server.getPlayer(data) is Player) {
                     if (data.contains(EASY_NAME_TAG_PLACEHOLDER)) {
                         final = final.replace(EASY_NAME_TAG_PLACEHOLDER, nameTagFormat)
                     }

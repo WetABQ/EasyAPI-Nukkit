@@ -1,6 +1,5 @@
 package top.wetabq.easyapi.utils
 
-import cn.nukkit.Server
 import cn.nukkit.plugin.Plugin
 import cn.nukkit.plugin.service.NKServiceManager
 import cn.nukkit.plugin.service.RegisteredServiceProvider
@@ -10,13 +9,13 @@ import com.google.common.base.Preconditions
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
+import top.wetabq.easyapi.EasyAPI
 import java.io.*
 import java.lang.reflect.Field
 import java.lang.reflect.InvocationTargetException
 import java.lang.reflect.Modifier
 import java.nio.charset.StandardCharsets
 import java.util.*
-import java.util.function.Consumer
 import java.util.zip.GZIPOutputStream
 import javax.net.ssl.HttpsURLConnection
 
@@ -43,11 +42,6 @@ class MerticsLite(var plugin: Plugin) {
     // The uuid of the server
     private var serverUUID: String? = null
 
-    /**
-     * Class constructor.
-     *
-     * @param plugin The plugin which stats should be submitted.
-     */
     init {
         Preconditions.checkNotNull(plugin)
         // Get the config file
@@ -93,7 +87,7 @@ class MerticsLite(var plugin: Plugin) {
         if (enabled) {
             var found = false
             // Search for all other bStats Metrics classes to see if we are the first one
-            for (service in Server.getInstance().serviceManager.knownService) {
+            for (service in EasyAPI.server.serviceManager.knownService) {
                 try {
                     service.getField("B_STATS_VERSION") // Our identifier :)
                     found = true // We aren't the first
@@ -102,7 +96,7 @@ class MerticsLite(var plugin: Plugin) {
                 }
             }
             // Register our service
-            Server.getInstance().serviceManager.register(MerticsLite::class.java, this, plugin, ServicePriority.NORMAL)
+            EasyAPI.server.serviceManager.register(MerticsLite::class.java, this, plugin, ServicePriority.NORMAL)
             if (!found) { // We are the first!
                 startSubmitting()
             }
@@ -131,7 +125,7 @@ class MerticsLite(var plugin: Plugin) {
                 }
                 // Nevertheless we want our code to run in the Nukkit main thread, so we have to use the Nukkit scheduler
                 // Don't be afraid! The connection to the bStats server is still async, only the stats collection is sync ;)
-                Server.getInstance().scheduler.scheduleTask(plugin) { submitData() }
+                EasyAPI.server.scheduler.scheduleTask(plugin) { submitData() }
             }
         }, 1000 * 60 * 5.toLong(), 1000 * 60 * 30.toLong())
         // Submit the data every 30 minutes, first time after 5 minutes to give other plugins enough time to start
@@ -162,10 +156,10 @@ class MerticsLite(var plugin: Plugin) {
      * @return The server specific data.
      */
     private fun getServerData(): JsonObject { // Minecraft specific data
-        val playerAmount = Server.getInstance().onlinePlayers.size
-        val onlineMode = if (Server.getInstance().getPropertyBoolean("xbox-auth", false)) 1 else 0
-        val minecraftVersion = Server.getInstance().version
-        val softwareName = Server.getInstance().name
+        val playerAmount = EasyAPI.server.onlinePlayers.size
+        val onlineMode = if (EasyAPI.server.getPropertyBoolean("xbox-auth", false)) 1 else 0
+        val minecraftVersion = EasyAPI.server.version
+        val softwareName = EasyAPI.server.name
         // OS/Java specific data
         val javaVersion = System.getProperty("java.version")
         val osName = System.getProperty("os.name")
@@ -193,7 +187,7 @@ class MerticsLite(var plugin: Plugin) {
         val data = getServerData()
         val pluginData = JsonArray()
         // Search for all other bStats Metrics classes to get their plugin data
-        Server.getInstance().serviceManager.knownService.forEach { service ->
+        EasyAPI.server.serviceManager.knownService.forEach { service ->
             try {
                 service.getField("B_STATS_VERSION") // Our identifier :)
                 var providers: List<RegisteredServiceProvider<*>>? = null
@@ -203,7 +197,7 @@ class MerticsLite(var plugin: Plugin) {
                     val handle = NKServiceManager::class.java.getDeclaredField("handle")
                     field.setInt(handle, handle.modifiers and Modifier.FINAL.inv())
                     handle.isAccessible = true
-                    providers = (handle[Server.getInstance().serviceManager] as Map<Class<*>?, List<RegisteredServiceProvider<*>>?>)[service]
+                    providers = (handle[EasyAPI.server.serviceManager] as Map<Class<*>?, List<RegisteredServiceProvider<*>>?>)[service]
                 } catch (e: IllegalAccessException) { // Something went wrong! :(
                     if (logFailedRequests) {
                         plugin.logger.warning("Failed to link to metrics class " + service.name, e)
@@ -258,7 +252,7 @@ class MerticsLite(var plugin: Plugin) {
     @Throws(Exception::class)
     private fun sendData(plugin: Plugin, data: JsonObject) {
         Preconditions.checkNotNull(data)
-        if (Server.getInstance().isPrimaryThread) {
+        if (EasyAPI.server.isPrimaryThread) {
             throw IllegalAccessException("This method must not be called from the main thread!")
         }
         if (logSentData) {

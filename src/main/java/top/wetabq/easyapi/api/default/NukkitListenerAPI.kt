@@ -1,11 +1,11 @@
 package top.wetabq.easyapi.api.default
 
-import cn.nukkit.Server
 import cn.nukkit.event.Event
 import cn.nukkit.event.HandlerList
 import cn.nukkit.event.Listener
 import cn.nukkit.plugin.Plugin
 import cn.nukkit.utils.Utils
+import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.CommonDynamicIntegrateAPI
 import java.lang.reflect.Method
 import java.util.*
@@ -13,7 +13,7 @@ import java.util.*
 class NukkitListenerAPI(private val plugin: Plugin) : CommonDynamicIntegrateAPI<Listener, NukkitListenerAPI>() {
 
     override fun addInterface(t: Listener): NukkitListenerAPI {
-        Server.getInstance().pluginManager.registerEvents(t, plugin)
+        EasyAPI.server.pluginManager.registerEvents(t, plugin)
         return this
     }
 

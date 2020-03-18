@@ -1,6 +1,5 @@
 package top.wetabq.easyapi.module.default
 
-import cn.nukkit.Server
 import cn.nukkit.event.Event
 import cn.nukkit.plugin.Plugin
 import cn.nukkit.scheduler.AsyncTask
@@ -25,7 +24,7 @@ suspend fun <T: Event> coroutineCallEvent(event: T, syncAction: (T) -> Unit = {}
 
 fun <T: Event> asyncTaskCallEvent(event: T, plugin: Plugin, syncAction: (T) -> Unit = {}, asyncAction: (T) -> Unit) {
     syncAction(event)
-    Server.getInstance().scheduler.scheduleAsyncTask(plugin, object: AsyncTask() {
+    EasyAPI.server.scheduler.scheduleAsyncTask(plugin, object: AsyncTask() {
         override fun onRun() {
             asyncAction(event)
         }

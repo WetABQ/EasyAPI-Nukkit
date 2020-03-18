@@ -1,6 +1,6 @@
 package top.wetabq.easyapi.api
 
-import cn.nukkit.Server
+import top.wetabq.easyapi.EasyAPI
 
 class CompatibilityCheck(private val providers: List<String>) {
 
@@ -9,7 +9,7 @@ class CompatibilityCheck(private val providers: List<String>) {
     fun check() {
         // TODO: Check server started
         providers.forEach { plugin ->
-            if (Server.getInstance().pluginManager.getPlugin(plugin) != null) {
+            if (EasyAPI.server.pluginManager.getPlugin(plugin) != null) {
                 finalKey = plugin
             }
         }
