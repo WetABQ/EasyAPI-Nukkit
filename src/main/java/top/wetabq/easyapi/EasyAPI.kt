@@ -21,7 +21,7 @@ object EasyAPI : PluginBase() {
     override fun onEnable() {
         MerticsLite(this)
         moduleManager.registerDefault()
-        //logger.info("EasyAPI by WetABQ Enabled...")
+        logger.info("EasyAPI by WetABQ Enabled...")
     }
 
     override fun onDisable() {
