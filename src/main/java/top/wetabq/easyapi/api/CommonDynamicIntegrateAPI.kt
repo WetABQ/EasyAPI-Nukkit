@@ -15,9 +15,9 @@ abstract class CommonDynamicIntegrateAPI<T, out I: DynamicIntegrateAPI<*, I>> : 
         return removeInterface(t)
     }
 
-    abstract fun addInterface(t: T): I
+    protected abstract fun addInterface(t: T): I
 
-    abstract fun removeInterface(t: T): I
+    protected abstract fun removeInterface(t: T): I
 
     override fun getAll(): Collection<T> = interfaceList
 
