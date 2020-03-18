@@ -4,6 +4,8 @@
 
 > Make creating plugin easier
 
+![Java CI](https://github.com/WetABQ/EasyAPI-Nukkit/workflows/Java%20CI/badge.svg)
+
 [简体中文](README_zh.md)
 
 ## How to use? 

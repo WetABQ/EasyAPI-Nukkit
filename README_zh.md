@@ -1,5 +1,7 @@
 # EasyAPI-Nukkit
 
+![Java CI](https://github.com/WetABQ/EasyAPI-Nukkit/workflows/Java%20CI/badge.svg)
+
 **目前插件在高速迭代，所有的 API 可能在没有预先通知的情况下被删除或更改**
 
 **教程正在编写中**
