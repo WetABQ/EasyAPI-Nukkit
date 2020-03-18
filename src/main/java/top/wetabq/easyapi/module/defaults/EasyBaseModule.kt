@@ -36,6 +36,7 @@ object EasyBaseModule: SimpleEasyAPIModule() {
             .add(EasyAPICommand)
         this.registerAPI(SIMPLE_CONFIG, ConfigAPI())
             .add(SimpleConfig)
+        SimpleConfig.init()
         val easyAPIConfig = this.registerAPI(EASY_API_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
             .add(SimpleConfigEntry(TITLE_PATH, "&c[&eEasy&aAPI&c]".color()))
 

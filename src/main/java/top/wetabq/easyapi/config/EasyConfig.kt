@@ -7,15 +7,10 @@ import cn.nukkit.utils.ConfigSection
 abstract class EasyConfig(configName:String, plugin: Plugin) : IEasyConfig {
 
     private var config: Config = Config("${plugin.dataFolder}/$configName.yml", Config.YAML)
-    private var configSection: ConfigSection
+    protected var configSection: ConfigSection
 
     init {
         this.configSection = config.rootSection
-        init0()
-    }
-
-    private fun init0() {
-        init()
     }
 
     override fun init() {

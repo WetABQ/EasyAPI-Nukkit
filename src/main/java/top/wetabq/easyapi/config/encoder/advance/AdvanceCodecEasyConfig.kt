@@ -12,7 +12,8 @@ abstract class AdvanceCodecEasyConfig<T>(
 
     @Suppress("UNCHECKED_CAST")
     override fun initFromConfigSecion(configSection: ConfigSection) {
-        (configSection[sectionName] as LinkedHashMap<String, Any>).forEach { (s, any) ->
+        //simpleConfig = linkedMapOf()
+        (configSection as LinkedHashMap<String, Any>).forEach { (s, any) ->
             if (any is LinkedHashMap<*, *>) {
                 simpleConfig[s] = decode(any as LinkedHashMap<String, *>)
             }
@@ -25,7 +26,7 @@ abstract class AdvanceCodecEasyConfig<T>(
         simpleConfig.forEach { (key, obj) ->
             encodeMap[key] = encode(obj)
         }
-        configSection[sectionName] = encodeMap
+        configSection.putAll(encodeMap)
     }
 
 }

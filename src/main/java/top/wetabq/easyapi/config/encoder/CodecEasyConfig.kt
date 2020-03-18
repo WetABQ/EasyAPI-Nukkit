@@ -4,25 +4,26 @@ import cn.nukkit.plugin.Plugin
 import cn.nukkit.utils.ConfigSection
 import top.wetabq.easyapi.config.EasyConfig
 
+@Suppress("SENSELESS_COMPARISON")
 abstract class CodecEasyConfig<T>(
     configName:String,
     plugin: Plugin
 ) : EasyConfig(configName, plugin), ConfigCodec<T> {
 
     var simpleConfig = linkedMapOf<String,T>()
-    var sectionName = "config"
 
     @Suppress("UNCHECKED_CAST")
     override fun initFromConfigSecion(configSection: ConfigSection) {
-        (configSection[sectionName] as LinkedHashMap<String, Any>).forEach { (s, any) ->
+        // if (simpleConfig == null) simpleConfig = linkedMapOf()
+        (configSection as LinkedHashMap<String, Any>).forEach { (s, any) ->
             simpleConfig[s] = decode(any)
         }
     }
 
     override fun spawnDefault(configSection: ConfigSection) {
-        simpleConfig = linkedMapOf()
-        sectionName = "config"
-        configSection[sectionName] = simpleConfig
+        // if (simpleConfig == null) simpleConfig = linkedMapOf()
+        configSection.putAll(simpleConfig)
+        configSection["notEmpty"] = "true"
     }
 
     override fun saveToConfigSection(configSection: ConfigSection) {
@@ -31,7 +32,12 @@ abstract class CodecEasyConfig<T>(
         simpleConfig.forEach { (key, obj) ->
             encodeMap[key] = encode(obj)
         }
-        configSection[sectionName] = encodeMap
+        configSection.putAll(encodeMap)
+    }
+
+    override fun isEmpty(): Boolean {
+        // if (simpleConfig == null) simpleConfig = linkedMapOf()
+        return simpleConfig.isEmpty() && configSection.isEmpty()
     }
 
 }

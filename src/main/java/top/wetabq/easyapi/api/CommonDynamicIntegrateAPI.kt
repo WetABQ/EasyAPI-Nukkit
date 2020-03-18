@@ -21,8 +21,9 @@ abstract class CommonDynamicIntegrateAPI<T, out I: DynamicIntegrateAPI<*, I>> : 
 
     override fun getAll(): Collection<T> = interfaceList
 
+    @Suppress("UNCHECKED_CAST")
     override fun removeAll() {
-        interfaceList.forEach { remove(it) }
+        (interfaceList.clone() as ArrayList<T> ).forEach { remove(it) }
     }
 
 }
