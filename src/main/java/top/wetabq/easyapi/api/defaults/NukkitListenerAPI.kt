@@ -1,4 +1,4 @@
-package top.wetabq.easyapi.api.default
+package top.wetabq.easyapi.api.defaults
 
 import cn.nukkit.event.Event
 import cn.nukkit.event.HandlerList

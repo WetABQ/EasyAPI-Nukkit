@@ -1,4 +1,4 @@
-package top.wetabq.easyapi.module.default
+package top.wetabq.easyapi.module.defaults
 
 import cn.nukkit.event.Event
 import cn.nukkit.plugin.Plugin

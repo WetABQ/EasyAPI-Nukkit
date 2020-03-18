@@ -1,4 +1,4 @@
-package top.wetabq.easyapi.module.default
+package top.wetabq.easyapi.module.defaults
 
 import cn.nukkit.Player
 import cn.nukkit.event.EventHandler
@@ -7,10 +7,8 @@ import cn.nukkit.event.player.PlayerChatEvent
 import cn.nukkit.event.player.PlayerDeathEvent
 import cn.nukkit.event.player.PlayerJoinEvent
 import cn.nukkit.event.player.PlayerRespawnEvent
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import top.wetabq.easyapi.EasyAPI
-import top.wetabq.easyapi.api.default.*
+import top.wetabq.easyapi.api.defaults.*
 import top.wetabq.easyapi.config.default.SimpleConfigEntry
 import top.wetabq.easyapi.module.ModuleInfo
 import top.wetabq.easyapi.module.ModuleVersion
@@ -82,26 +80,30 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
 
                 @EventHandler
                 fun onChatEvent(event: PlayerChatEvent) {
-                    GlobalScope.launch {
-                        coroutineCallEvent(event) {
-                            event.message = MessageFormatAPI.format(chatFormat, event)
-                        }
+                    asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
+                        event.message = MessageFormatAPI.format(chatFormat, event)
                     }
                 }
 
                 @EventHandler
                 fun onJoinEvent(event: PlayerJoinEvent) {
-                    event.player.nameTag = MessageFormatAPI.format(nameTagFormat, event.player.name)
+                    asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
+                        event.player.nameTag = MessageFormatAPI.format(nameTagFormat, event.player.name)
+                    }
                 }
 
                 @EventHandler
                 fun onRespawnEvent(event: PlayerRespawnEvent) {
-                    event.player.nameTag = MessageFormatAPI.format(nameTagFormat, event.player.name)
+                    asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
+                        event.player.nameTag = MessageFormatAPI.format(nameTagFormat, event.player.name)
+                    }
                 }
 
                 @EventHandler
                 fun onDeathEvent(event: PlayerDeathEvent) {
-                    event.entity.nameTag = MessageFormatAPI.format(nameTagFormat, event.entity.name)
+                    asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
+                        event.entity.nameTag = MessageFormatAPI.format(nameTagFormat, event.entity.name)
+                    }
                 }
 
             })

@@ -1,4 +1,4 @@
-package top.wetabq.easyapi.api.default
+package top.wetabq.easyapi.api.defaults
 
 import cn.nukkit.Player
 import me.onebone.economyapi.EconomyAPI

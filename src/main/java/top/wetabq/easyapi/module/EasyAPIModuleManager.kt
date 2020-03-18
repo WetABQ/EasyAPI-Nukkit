@@ -2,10 +2,10 @@ package top.wetabq.easyapi.module
 
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.DisableNotRemoveAll
-import top.wetabq.easyapi.module.default.AsyncListenerModule
-import top.wetabq.easyapi.module.default.ChatNameTagFormatModule
-import top.wetabq.easyapi.module.default.EasyBaseModule
-import top.wetabq.easyapi.module.default.ScreenShowModule
+import top.wetabq.easyapi.module.defaults.AsyncListenerModule
+import top.wetabq.easyapi.module.defaults.ChatNameTagFormatModule
+import top.wetabq.easyapi.module.defaults.EasyBaseModule
+import top.wetabq.easyapi.module.defaults.ScreenShowModule
 import java.util.concurrent.ConcurrentHashMap
 
 object EasyAPIModuleManager {

@@ -1,10 +1,10 @@
-package top.wetabq.easyapi.module.default
+package top.wetabq.easyapi.module.defaults
 
 import cn.nukkit.Player
 import cn.nukkit.scheduler.PluginTask
 import cn.nukkit.utils.TextFormat
 import top.wetabq.easyapi.EasyAPI
-import top.wetabq.easyapi.api.default.PluginTaskAPI
+import top.wetabq.easyapi.api.defaults.PluginTaskAPI
 import top.wetabq.easyapi.module.ModuleInfo
 import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule

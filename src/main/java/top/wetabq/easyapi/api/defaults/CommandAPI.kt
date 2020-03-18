@@ -1,4 +1,4 @@
-package top.wetabq.easyapi.api.default
+package top.wetabq.easyapi.api.defaults
 
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.CommonDynamicIntegrateAPI
