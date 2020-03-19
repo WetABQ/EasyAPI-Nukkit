@@ -13,7 +13,7 @@ class AsyncTaskAPI(private val plugin: Plugin) : CommonDynamicIntegrateAPI<Async
     }
 
     override fun removeInterface(t: AsyncTask): AsyncTaskAPI {
-        EasyAPI.server.scheduler.scheduleAsyncTask(plugin, t)
+        if (!t.isFinished) EasyAPI.server.scheduler.cancelTask(t.taskId)
         return this
     }
 

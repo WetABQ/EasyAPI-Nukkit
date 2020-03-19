@@ -28,19 +28,21 @@ object EasyAPIModuleManager {
 
     fun disable(module: IEasyAPIModule) {
         module.disable()
+        modules.remove(module.getModuleInfo())
         module.getAllIntegrateAPI().forEach { api ->
             if (!api.javaClass.isAnnotationPresent(DisableNotRemoveAll::class.java)) api.removeAll()
         }
+        val info = module.getModuleInfo()
+        EasyAPI.INSTANCE.logger.warning("Module ${info.name}_${info.moduleVersion} from ${info.moduleOwner.name} by ${info.author} disabled")
     }
 
     fun disableAll() {
-        modules.forEach { (info, module) ->
-            disable(module)
-            EasyAPI.INSTANCE.logger.warning("Module ${info.name}_${info.moduleVersion} from ${info.moduleOwner.name} by ${info.author} disabled")
-        }
+        modules.values.forEach { disable(it) }
     }
 
     fun getModule(moduleInfo: ModuleInfo) : IEasyAPIModule? = modules[moduleInfo]
+
+    fun getAllModule(): Map<ModuleInfo, IEasyAPIModule> = modules
 
 
 

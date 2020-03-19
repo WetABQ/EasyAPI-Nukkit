@@ -45,8 +45,8 @@ class ReflectionConfigCodec<T>(private val clazz: Class<T>) :
         return constructor.newInstance(*arrayList.toArray())
     }
 
-    private fun isJavaClass(clz: Class<*>?): Boolean {
-        return clz != null && clz.classLoader == null
+    private fun isJavaClass(clz: Class<*>): Boolean {
+        return (clz != null && clz.classLoader == null) || clz.packageName.startsWith("kotlin") || clz.packageName.startsWith("java")
     }
 
 
