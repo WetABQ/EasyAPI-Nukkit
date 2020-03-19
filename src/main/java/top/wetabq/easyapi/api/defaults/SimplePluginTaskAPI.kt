@@ -6,36 +6,36 @@ import top.wetabq.easyapi.api.SimpleIntegrateAPI
 
 object SimplePluginTaskAPI : SimpleIntegrateAPI {
 
-    fun delay(delay: Int, action: (Int) -> Unit): PluginTask<EasyAPI> {
+    fun delay(delay: Int, action: (PluginTask<EasyAPI>, Int) -> Unit): PluginTask<EasyAPI> {
         val task =
             object: PluginTask<EasyAPI>(EasyAPI.INSTANCE) {
 
                 override fun onRun(currentTick: Int) {
-                    action(currentTick)
+                    action(this, currentTick)
                 }
             }
         EasyAPI.server.scheduler.scheduleDelayedTask(task, delay)
         return task
     }
 
-    fun repeating(period: Int, action: (Int) -> Unit): PluginTask<EasyAPI> {
+    fun repeating(period: Int, action: (PluginTask<EasyAPI>, Int) -> Unit): PluginTask<EasyAPI> {
         val task =
             object: PluginTask<EasyAPI>(EasyAPI.INSTANCE) {
 
                 override fun onRun(currentTick: Int) {
-                    action(currentTick)
+                    action(this, currentTick)
                 }
             }
         EasyAPI.server.scheduler.scheduleRepeatingTask(task, period)
         return task
     }
 
-    fun delayRepeating(delay: Int, period: Int, action: (Int) -> Unit): PluginTask<EasyAPI> {
+    fun delayRepeating(delay: Int, period: Int, action: (PluginTask<EasyAPI>, Int) -> Unit): PluginTask<EasyAPI> {
         val task =
             object: PluginTask<EasyAPI>(EasyAPI.INSTANCE) {
 
                 override fun onRun(currentTick: Int) {
-                    action(currentTick)
+                    action(this, currentTick)
                 }
             }
         EasyAPI.server.scheduler.scheduleDelayedRepeatingTask(task, delay, period)

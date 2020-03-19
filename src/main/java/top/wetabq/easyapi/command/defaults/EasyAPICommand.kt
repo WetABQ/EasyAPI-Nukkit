@@ -1,8 +1,8 @@
 package top.wetabq.easyapi.command.defaults
 
 import cn.nukkit.command.CommandSender
+import cn.nukkit.command.data.CommandParameter
 import top.wetabq.easyapi.EasyAPI
-import top.wetabq.easyapi.command.CommandArgument
 import top.wetabq.easyapi.command.EasyCommand
 import top.wetabq.easyapi.command.EasySubCommand
 
@@ -10,7 +10,7 @@ object EasyAPICommand : EasyCommand("eapi", "EasyAPI Command") {
 
     init {
         subCommand.add(object: EasySubCommand("version") {
-            override fun getArguments(): Array<CommandArgument>? {
+            override fun getParameters(): Array<CommandParameter>? {
                 return null
             }
 

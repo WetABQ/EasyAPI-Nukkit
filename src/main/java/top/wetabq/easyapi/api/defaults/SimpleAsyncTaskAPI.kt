@@ -6,11 +6,11 @@ import top.wetabq.easyapi.api.SimpleIntegrateAPI
 
 object SimpleAsyncTaskAPI : SimpleIntegrateAPI {
 
-    fun add(action: () -> Unit): AsyncTask {
+    fun add(action: (AsyncTask) -> Unit): AsyncTask {
         val task =
             object: AsyncTask() {
                 override fun onRun() {
-                    action()
+                    action(this)
                 }
             }
         EasyAPI.server.scheduler.scheduleAsyncTask(EasyAPI.INSTANCE, task)

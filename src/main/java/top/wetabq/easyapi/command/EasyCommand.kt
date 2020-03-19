@@ -5,7 +5,6 @@ import cn.nukkit.command.CommandSender
 import cn.nukkit.command.data.CommandParameter
 import cn.nukkit.utils.TextFormat
 import java.lang.StringBuilder
-import java.util.HashMap
 
 abstract class EasyCommand(private val command: String, description: String = "Easy Command") : Command(command) {
 
@@ -18,7 +17,7 @@ abstract class EasyCommand(private val command: String, description: String = "E
     }
 
     fun loadCommandBase() {
-        this.setCommandParameters(object : HashMap<String, Array<CommandParameter>>() {
+        /*this.setCommandParameters(object : HashMap<String, Array<CommandParameter>>() {
             init {
                 var i = 1
                 subCommand.forEach { sc ->
@@ -33,14 +32,22 @@ abstract class EasyCommand(private val command: String, description: String = "E
                     i++
                 }
             }
-        })
+        })*/
+        this.commandParameters.clear()
+        subCommand.forEach { this.commandParameters[it.subCommandName] = it.getParameters() }
+        /**
+         * this.commandParameters.put("subcommand", new CommandParameter[] {
+        new CommandParameter("subcommandParam", new String[]{"param"}),
+        new CommandParameter("other arg", CommandParamType.TEXT)
+        });
+         */
         this.usage = "/${command} <subcommand> [args]"
     }
 
     fun addHelp() {
         this.subCommand.add(object: EasySubCommand("help") {
 
-            override fun getArguments(): Array<CommandArgument>? = null
+            override fun getParameters(): Array<CommandParameter>? = null
 
             override fun getAliases(): Array<String>? = null
 
@@ -77,13 +84,23 @@ abstract class EasyCommand(private val command: String, description: String = "E
         return true
     }
 
+    // /eapi xxxx <argName: argType> [argName: argType]
+
     open fun sendHelp(sender: CommandSender) {
-        sender.sendMessage(TextFormat.GOLD.toString() + "----Help----")
+        sender.sendMessage(TextFormat.GOLD.toString() + "------Help------")
         subCommand.forEach { sc ->
-            val strs = StringBuilder()
-            sc.getAliases()?.forEach {aliases -> strs.append(aliases) }
-            if (strs.toString() != "") strs.insert(0, "(").append(")")
-            sender.sendMessage("${TextFormat.AQUA}/${command} ${sc.subCommandName}$strs - ${sc.getDescription()}")
+            var str = StringBuilder()
+            sc.getAliases()?.forEach {aliases -> str.append("$aliases|") }
+            val args = StringBuilder()
+            sc.getParameters()?.forEach {
+                if (it.optional) args.append("[") else args.append("<")
+                args.append(it.name)
+                args.append(": ")
+                args.append(it.name)
+                if (it.optional) args.append("]") else args.append("> ")
+            }
+            if (str.toString() != "") str = StringBuilder(str.insert(0, "(").substring(0, str.length - 1) + ")")
+            sender.sendMessage("${TextFormat.AQUA}/${command} ${sc.subCommandName}$str $args- ${sc.getDescription()}")
         }
     }
 

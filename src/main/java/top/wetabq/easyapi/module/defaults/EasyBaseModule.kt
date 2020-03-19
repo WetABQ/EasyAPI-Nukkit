@@ -51,7 +51,7 @@ object EasyBaseModule: SimpleEasyAPIModule() {
                     EasyAPIModuleManager.getAllModule().forEach { (info, module) ->
                         val moduleSwitchPath = "$MODULE_PATH.${info.moduleOwner.name}.${info.name}"
                         easyAPIConfig.add(SimpleConfigEntry(moduleSwitchPath, true))
-                        if (!(easyAPIConfig.getPathValue(moduleSwitchPath) as String).toBoolean()) EasyAPIModuleManager.disable(module)
+                        if (!easyAPIConfig.getPathValue(moduleSwitchPath).toString().toBoolean()) EasyAPIModuleManager.disable(module)
                     }
                 }
             })

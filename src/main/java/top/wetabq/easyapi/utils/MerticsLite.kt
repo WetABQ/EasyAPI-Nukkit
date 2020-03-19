@@ -1,31 +1,21 @@
 package top.wetabq.easyapi.utils
 
 import cn.nukkit.plugin.Plugin
-import cn.nukkit.plugin.service.NKServiceManager
-import cn.nukkit.plugin.service.RegisteredServiceProvider
-import cn.nukkit.plugin.service.ServicePriority
 import cn.nukkit.utils.Config
 import com.google.common.base.Preconditions
 import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import top.wetabq.easyapi.EasyAPI
+import top.wetabq.easyapi.api.defaults.SimpleAsyncTaskAPI
+import top.wetabq.easyapi.api.defaults.SimplePluginTaskAPI
 import java.io.*
-import java.lang.reflect.Field
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.Modifier
 import java.nio.charset.StandardCharsets
 import java.util.*
 import java.util.zip.GZIPOutputStream
 import javax.net.ssl.HttpsURLConnection
 
 class MerticsLite(var plugin: Plugin) {
-
-    // The version of this bStats class
-    val B_STATS_VERSION = 1
-
-    // The url to which the data is sent
-    private val URL = "https://bStats.org/submitData/bukkit"
 
     // Is bStats enabled on this server?
     private var enabled = false
@@ -43,7 +33,6 @@ class MerticsLite(var plugin: Plugin) {
     private var serverUUID: String? = null
 
     init {
-        Preconditions.checkNotNull(plugin)
         // Get the config file
         val bStatsFolder = File(plugin.dataFolder.parentFile, "bStats")
         val configFile = File(bStatsFolder, "config.yml")
@@ -85,53 +74,16 @@ class MerticsLite(var plugin: Plugin) {
         logSentData = config.getBoolean("logSentData", false)
         logResponseStatusText = config.getBoolean("logResponseStatusText", false)
         if (enabled) {
-            var found = false
-            // Search for all other bStats Metrics classes to see if we are the first one
-            for (service in EasyAPI.server.serviceManager.knownService) {
-                try {
-                    service.getField("B_STATS_VERSION") // Our identifier :)
-                    found = true // We aren't the first
-                    break
-                } catch (ignored: NoSuchFieldException) {
+            SimplePluginTaskAPI.delayRepeating(20 * 60 * 5, 20 * 60 * 30) { task, _ ->
+                if (!plugin.isEnabled) { // Plugin was disabled
+                    task.cancel()
+                } else {
+                    submitData()
                 }
-            }
-            // Register our service
-            EasyAPI.server.serviceManager.register(MerticsLite::class.java, this, plugin, ServicePriority.NORMAL)
-            if (!found) { // We are the first!
-                startSubmitting()
             }
         }
     }
 
-    /**
-     * Checks if bStats is enabled.
-     *
-     * @return Whether bStats is enabled or not.
-     */
-    fun isEnabled(): Boolean {
-        return enabled
-    }
-
-    /**
-     * Starts the Scheduler which submits our data every 30 minutes.
-     */
-    private fun startSubmitting() {
-        val timer = Timer(true) // We use a timer cause want to be independent from the server tps
-        timer.scheduleAtFixedRate(object : TimerTask() {
-            override fun run() {
-                if (!plugin.isEnabled) { // Plugin was disabled
-                    timer.cancel()
-                    return
-                }
-                // Nevertheless we want our code to run in the Nukkit main thread, so we have to use the Nukkit scheduler
-                // Don't be afraid! The connection to the bStats server is still async, only the stats collection is sync ;)
-                EasyAPI.server.scheduler.scheduleTask(plugin) { submitData() }
-            }
-        }, 1000 * 60 * 5.toLong(), 1000 * 60 * 30.toLong())
-        // Submit the data every 30 minutes, first time after 5 minutes to give other plugins enough time to start
-        // WARNING: Changing the frequency has no effect but your plugin WILL be blocked/deleted!
-        // WARNING: Just don't do it!
-    }
 
     /**
      * Gets the plugin specific data.
@@ -186,52 +138,9 @@ class MerticsLite(var plugin: Plugin) {
     private fun submitData() {
         val data = getServerData()
         val pluginData = JsonArray()
-        // Search for all other bStats Metrics classes to get their plugin data
-        EasyAPI.server.serviceManager.knownService.forEach { service ->
-            try {
-                service.getField("B_STATS_VERSION") // Our identifier :)
-                var providers: List<RegisteredServiceProvider<*>>? = null
-                try {
-                    val field = Field::class.java.getDeclaredField("modifiers")
-                    field.isAccessible = true
-                    val handle = NKServiceManager::class.java.getDeclaredField("handle")
-                    field.setInt(handle, handle.modifiers and Modifier.FINAL.inv())
-                    handle.isAccessible = true
-                    providers = (handle[EasyAPI.server.serviceManager] as Map<Class<*>?, List<RegisteredServiceProvider<*>>?>)[service]
-                } catch (e: IllegalAccessException) { // Something went wrong! :(
-                    if (logFailedRequests) {
-                        plugin.logger.warning("Failed to link to metrics class " + service.name, e)
-                    }
-                } catch (e: IllegalArgumentException) {
-                    if (logFailedRequests) {
-                        plugin.logger.warning("Failed to link to metrics class " + service.name, e)
-                    }
-                } catch (e: SecurityException) {
-                    if (logFailedRequests) {
-                        plugin.logger.warning("Failed to link to metrics class " + service.name, e)
-                    }
-                }
-                if (providers != null) {
-                    for (provider in providers) {
-                        try {
-                            val plugin = provider.service.getMethod("getPluginData").invoke(provider.provider)
-                            if (plugin is JsonObject) {
-                                pluginData.add(plugin as JsonElement)
-                            }
-                        } catch (ignored: SecurityException) {
-                        } catch (ignored: NoSuchMethodException) {
-                        } catch (ignored: IllegalAccessException) {
-                        } catch (ignored: IllegalArgumentException) {
-                        } catch (ignored: InvocationTargetException) {
-                        }
-                    }
-                }
-            } catch (ignored: NoSuchFieldException) {
-            }
-        }
+        pluginData.add(getPluginData() as JsonElement)
         data.add("plugins", pluginData)
-        // Create a new thread for the connection to the bStats server
-        Thread(Runnable {
+        SimpleAsyncTaskAPI.add {
             try { // Send the data
                 sendData(plugin, data)
             } catch (e: Exception) { // Something went wrong! :(
@@ -239,7 +148,7 @@ class MerticsLite(var plugin: Plugin) {
                     plugin.logger.warning("Could not submit plugin stats of " + plugin.name, e)
                 }
             }
-        }).start()
+        }
     }
 
     /**
@@ -301,6 +210,16 @@ class MerticsLite(var plugin: Plugin) {
         val outputStream = ByteArrayOutputStream()
         GZIPOutputStream(outputStream).use { gzip -> gzip.write(str.toByteArray(StandardCharsets.UTF_8)) }
         return outputStream.toByteArray()
+    }
+
+    companion object {
+
+        // The version of this bStats class
+        const val B_STATS_VERSION = 1
+
+        // The url to which the data is sent
+        private val URL = "https://bStats.org/submitData/bukkit"
+
     }
 
 
