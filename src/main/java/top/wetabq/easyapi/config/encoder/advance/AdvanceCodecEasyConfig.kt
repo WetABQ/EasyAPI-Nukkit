@@ -35,4 +35,6 @@ abstract class AdvanceCodecEasyConfig<T>(
         return simpleConfig[key]?:defaultValue
     }
 
+    fun getDefaultValue(): T = defaultValue
+
 }

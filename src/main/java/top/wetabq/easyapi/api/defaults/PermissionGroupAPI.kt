@@ -21,7 +21,9 @@ object PermissionGroupAPI : SimpleIntegrateAPI {
     ))
 
     init {
-        EconomyAPI.compatibilityCheck.check()
+        SimplePluginTaskAPI.delay(20) { _, _ ->
+            compatibilityCheck.check()
+        }
     }
 
 

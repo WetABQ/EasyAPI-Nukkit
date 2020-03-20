@@ -13,6 +13,7 @@ import top.wetabq.easyapi.config.defaults.SimpleConfigEntry
 import top.wetabq.easyapi.module.ModuleInfo
 import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule
+import top.wetabq.easyapi.utils.color
 
 object ChatNameTagFormatModule : SimpleEasyAPIModule() {
 
@@ -46,15 +47,15 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
             .add(SimpleConfigEntry(NAME_TAG_FORMAT_PATH, "$PERMISSION_GROUP_PREFIX_PLACEHOLDER &r&e$PLAYER_NAME_PLACEHOLDER&r $PERMISSION_GROUP_SUFFIX_PLACEHOLDER"))
             .add(SimpleConfigEntry(CHAT_FORMAT_PATH, "$EASY_NAME_TAG_PLACEHOLDER &r&c≫&r &7$CHAT_MESSAGE_PLACEHOLDER"))
 
-        val nameTagFormat = chatConfig.getPath(NAME_TAG_FORMAT_PATH)
-        val chatFormat = chatConfig.getPath(CHAT_FORMAT_PATH)
+        val nameTagFormat = chatConfig.getPathValue(NAME_TAG_FORMAT_PATH) as String
+        val chatFormat = chatConfig.getPathValue(CHAT_FORMAT_PATH) as String
 
         val nameTagFormatter = object : MessageFormatter<String> {
             override fun format(message: String, data: String): String {
                 //IF data IS PLAYER NAME
                 var final = message
                 if (EasyAPI.server.getPlayer(data) is Player) {
-                    if (data.contains(EASY_NAME_TAG_PLACEHOLDER)) {
+                    if (message.contains(EASY_NAME_TAG_PLACEHOLDER)) {
                         final = final.replace(EASY_NAME_TAG_PLACEHOLDER, nameTagFormat)
                     }
                     final = final.replace(PLAYER_NAME_PLACEHOLDER, data)
@@ -80,29 +81,28 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
 
                 @EventHandler
                 fun onChatEvent(event: PlayerChatEvent) {
-                    asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
-                        event.message = MessageFormatAPI.format(chatFormat, event)
-                    }
+                    EasyAPI.INSTANCE.server.broadcastMessage(MessageFormatAPI.format(chatFormat, event).color())
+                    event.setCancelled()
                 }
 
                 @EventHandler
                 fun onJoinEvent(event: PlayerJoinEvent) {
                     asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
-                        event.player.nameTag = MessageFormatAPI.format(nameTagFormat, event.player.name)
+                        event.player.nameTag = MessageFormatAPI.format(nameTagFormat.color(), event.player.name)
                     }
                 }
 
                 @EventHandler
                 fun onRespawnEvent(event: PlayerRespawnEvent) {
                     asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
-                        event.player.nameTag = MessageFormatAPI.format(nameTagFormat, event.player.name)
+                        event.player.nameTag = MessageFormatAPI.format(nameTagFormat.color(), event.player.name)
                     }
                 }
 
                 @EventHandler
                 fun onDeathEvent(event: PlayerDeathEvent) {
                     asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
-                        event.entity.nameTag = MessageFormatAPI.format(nameTagFormat, event.entity.name)
+                        event.entity.nameTag = MessageFormatAPI.format(nameTagFormat.color(), event.entity.name)
                     }
                 }
 

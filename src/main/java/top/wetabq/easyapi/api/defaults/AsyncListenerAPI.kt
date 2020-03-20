@@ -3,17 +3,15 @@ package top.wetabq.easyapi.api.defaults
 
 import cn.nukkit.event.EventHandler
 import cn.nukkit.event.Listener
-import cn.nukkit.event.block.BlockBreakEvent
-import cn.nukkit.event.block.BlockPlaceEvent
-import cn.nukkit.event.entity.EntityArmorChangeEvent
-import cn.nukkit.event.entity.EntityDamageByEntityEvent
-import cn.nukkit.event.entity.EntityDamageEvent
-import cn.nukkit.event.entity.EntityDeathEvent
+import cn.nukkit.event.block.*
+import cn.nukkit.event.entity.*
 import cn.nukkit.event.inventory.CraftItemEvent
 import cn.nukkit.event.inventory.InventoryPickupItemEvent
 import cn.nukkit.event.inventory.InventoryTransactionEvent
 import cn.nukkit.event.level.WeatherChangeEvent
 import cn.nukkit.event.player.*
+import cn.nukkit.event.potion.PotionApplyEvent
+import cn.nukkit.event.vehicle.VehicleDestroyEvent
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.SimpleIntegrateAPI
 import top.wetabq.easyapi.listener.AsyncListener
@@ -244,6 +242,108 @@ object AsyncListenerAPI : SimpleIntegrateAPI, Listener,  AsyncListener {
     override fun onWeatherChangeEvent(event: WeatherChangeEvent) {
         asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
             asyncListenerList.forEach { it.onWeatherChangeEvent(event) }
+        }
+    }
+
+    override fun onEntityVehicleEnterEvent(event: EntityVehicleEnterEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onEntityVehicleEnterEvent(event) }
+        }
+    }
+
+    override fun onEntityLevelChangeEvent(event: EntityLevelChangeEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onEntityLevelChangeEvent(event) }
+        }
+    }
+
+    override fun onEntityShootBowEvent(event: EntityShootBowEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onEntityShootBowEvent(event) }
+        }
+    }
+
+    override fun onProjectileLaunchEvent(event: ProjectileLaunchEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onProjectileLaunchEvent(event) }
+        }
+    }
+
+    override fun onProjectileHitEvent(event: ProjectileHitEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onProjectileHitEvent(event) }
+        }
+    }
+
+    override fun onEntityTeleportEvent(event: EntityTeleportEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onEntityTeleportEvent(event) }
+        }
+    }
+
+    override fun onBlockBurnEvent(event: BlockBurnEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onBlockBurnEvent(event) }
+        }
+    }
+
+    override fun onBlockFromToEvent(event: BlockFromToEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onBlockFromToEvent(event) }
+        }
+    }
+
+    override fun onBlockIgniteEvent(event: BlockIgniteEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onBlockIgniteEvent(event) }
+        }
+    }
+
+    override fun onVehicleDestroyEvent(event: VehicleDestroyEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onVehicleDestroyEvent(event) }
+        }
+    }
+
+    override fun onPotionApplyEvent(event: PotionApplyEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onPotionApplyEvent(event) }
+        }
+    }
+
+    override fun onPlayerChunkRequestEvent(event: PlayerChunkRequestEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onPlayerChunkRequestEvent(event) }
+        }
+    }
+
+    override fun onEntityExplodeEvent(event: EntityExplodeEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onEntityExplodeEvent(event) }
+        }
+    }
+
+    override fun onEntityExplosionPrimeEvent(event: EntityExplodeEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onEntityExplosionPrimeEvent(event) }
+        }
+    }
+
+    override fun onLiquidFlowEvent(event: LiquidFlowEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onLiquidFlowEvent(event) }
+        }
+    }
+
+    override fun onBlockFormEvent(event: BlockFormEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onBlockFormEvent(event) }
+        }
+    }
+
+    override fun onLeavesDecayEvent(event: LeavesDecayEvent) {
+        asyncTaskCallEvent(event, EasyAPI.INSTANCE) {
+            asyncListenerList.forEach { it.onLeavesDecayEvent(event) }
         }
     }
 

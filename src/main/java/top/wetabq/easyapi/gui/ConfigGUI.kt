@@ -8,23 +8,43 @@ import cn.nukkit.form.window.FormWindow
 import moe.him188.gui.window.ResponsibleFormWindowCustom
 import top.wetabq.easyapi.config.encoder.advance.SimpleCodecEasyConfig
 import top.wetabq.easyapi.utils.color
+import java.lang.reflect.Field
 import kotlin.math.min
 
 /**
  * WARN: Use the lib gui.jar by Him188
  */
-class ConfigGUI<T>(private val simpleCodecEasyConfig: SimpleCodecEasyConfig<T>, obj: T, key: String, guiTitle: String = "",  parent: FormWindow? = null) : ResponsibleFormWindowCustom(guiTitle) {
+class ConfigGUI<T>(
+    private val simpleCodecEasyConfig: SimpleCodecEasyConfig<T>,
+    private val obj: T,
+    private val key: String,
+    guiTitle: String = "",
+    parent: FormWindow? = null
+) : ResponsibleFormWindowCustom(guiTitle) {
+
+    private var translatedMap = linkedMapOf<String, String>()
 
     init {
         setParent(parent)
+    }
+
+    fun init() {
         addElement(ElementInput("Id", key, key))
         simpleCodecEasyConfig.encode(obj).forEach { (elementName, value) ->
-            if (value is Boolean) {
-                addElement(ElementToggle(elementName, value))
-            } else {
-                addElement(ElementInput(elementName, value.toString(), value.toString()))
+            var finalElement = elementName
+            if (translatedMap.isNotEmpty()) finalElement = translatedMap[elementName] ?: elementName
+            if (finalElement != "%NONE%") {
+                if (value is Boolean) {
+                    addElement(ElementToggle(finalElement, value))
+                } else {
+                    addElement(ElementInput(finalElement, value.toString(), value.toString()))
+                }
             }
         }
+    }
+
+    fun setTranslateMap(map: LinkedHashMap<String, String>) {
+        translatedMap = map
     }
 
     @Suppress("UNCHECKED_CAST")
@@ -39,8 +59,19 @@ class ConfigGUI<T>(private val simpleCodecEasyConfig: SimpleCodecEasyConfig<T>, 
                 val clazz = simpleCodecEasyConfig.clazzT
                 val arrayParam = arrayListOf<Any>()
                 params.forEach { param -> arrayParam.add(autoType(param.toString())) }
+                if (translatedMap.isNotEmpty()) {
+                    translatedMap.forEach { (key, value) ->
+                        if (value == "%NONE%") {
+                            lateinit var field: Field
+                            clazz.declaredFields.forEach { if (it.name == key) field = it }
+                            field.isAccessible = true
+                            arrayParam.add(field.get(obj))
+                        }
+                    }
+                }
                 val newDataObj = clazz.constructors[0].newInstance(*arrayParam.toArray()) as T
                 if (id is String) {
+                    player.sendMessage("&e${simpleCodecEasyConfig.plugin.name} > &aSave successfully".color())
                     simpleCodecEasyConfig.simpleConfig[id] = newDataObj
                     simpleCodecEasyConfig.save()
                 } else {

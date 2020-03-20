@@ -12,7 +12,6 @@ abstract class EasyCommand(private val command: String, description: String = "E
 
     init {
         this.setDescription(description)
-        loadCommandBase()
         addHelp()
     }
 
@@ -34,13 +33,9 @@ abstract class EasyCommand(private val command: String, description: String = "E
             }
         })*/
         this.commandParameters.clear()
-        subCommand.forEach { this.commandParameters[it.subCommandName] = it.getParameters() }
-        /**
-         * this.commandParameters.put("subcommand", new CommandParameter[] {
-        new CommandParameter("subcommandParam", new String[]{"param"}),
-        new CommandParameter("other arg", CommandParamType.TEXT)
-        });
-         */
+        subCommand.forEach { this.commandParameters[it.subCommandName] = arrayOf(
+            CommandParameter("arg", arrayOf(it.subCommandName).plus(it.getAliases()?: arrayOf()))
+        ).plus(it.getParameters()?: arrayOf()) }
         this.usage = "/${command} <subcommand> [args]"
     }
 

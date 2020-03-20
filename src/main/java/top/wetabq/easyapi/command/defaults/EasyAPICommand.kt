@@ -29,6 +29,7 @@ object EasyAPICommand : EasyCommand("eapi", "EasyAPI Command") {
             }
 
         })
+        loadCommandBase()
     }
 
 }

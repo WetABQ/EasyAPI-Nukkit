@@ -1,16 +1,14 @@
 package top.wetabq.easyapi.listener
 
-import cn.nukkit.event.block.BlockBreakEvent
-import cn.nukkit.event.block.BlockPlaceEvent
-import cn.nukkit.event.entity.EntityArmorChangeEvent
-import cn.nukkit.event.entity.EntityDamageByEntityEvent
-import cn.nukkit.event.entity.EntityDamageEvent
-import cn.nukkit.event.entity.EntityDeathEvent
+import cn.nukkit.event.block.*
+import cn.nukkit.event.entity.*
 import cn.nukkit.event.inventory.CraftItemEvent
 import cn.nukkit.event.inventory.InventoryPickupItemEvent
 import cn.nukkit.event.inventory.InventoryTransactionEvent
 import cn.nukkit.event.level.WeatherChangeEvent
 import cn.nukkit.event.player.*
+import cn.nukkit.event.potion.PotionApplyEvent
+import cn.nukkit.event.vehicle.VehicleDestroyEvent
 
 interface AsyncListener {
 
@@ -73,5 +71,44 @@ interface AsyncListener {
     fun onInventoryTransactionEvent(event: InventoryTransactionEvent) {}
 
     fun onWeatherChangeEvent(event: WeatherChangeEvent) {}
+
+    fun onEntityVehicleEnterEvent(event: EntityVehicleEnterEvent) {}
+
+    fun onEntityLevelChangeEvent(event: EntityLevelChangeEvent) {}
+
+    fun onEntityShootBowEvent(event: EntityShootBowEvent) {}
+
+    fun onProjectileLaunchEvent(event: ProjectileLaunchEvent) {}
+
+    fun onProjectileHitEvent(event: ProjectileHitEvent) {}
+
+    fun onEntityTeleportEvent(event: EntityTeleportEvent) {}
+
+    fun onBlockBurnEvent(event: BlockBurnEvent) {}
+
+    fun onBlockFromToEvent(event: BlockFromToEvent) {}
+
+    fun onBlockIgniteEvent(event: BlockIgniteEvent) {}
+
+    fun onVehicleDestroyEvent(event: VehicleDestroyEvent) {}
+
+    fun onPotionApplyEvent(event: PotionApplyEvent) {}
+
+    fun onPlayerChunkRequestEvent(event: PlayerChunkRequestEvent) {}
+
+    fun onEntityExplodeEvent(event: EntityExplodeEvent) {}
+
+    fun onEntityExplosionPrimeEvent(event: EntityExplodeEvent) {}
+
+    fun onLiquidFlowEvent(event: LiquidFlowEvent) {}
+
+    fun onBlockFormEvent(event: BlockFormEvent) {}
+
+    fun onLeavesDecayEvent(event: LeavesDecayEvent)
+
+
+
+
+
 
 }

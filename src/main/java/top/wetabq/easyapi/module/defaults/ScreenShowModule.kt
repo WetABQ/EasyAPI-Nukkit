@@ -11,6 +11,7 @@ import top.wetabq.easyapi.module.SimpleEasyAPIModule
 import top.wetabq.easyapi.screen.ScreenShow
 import top.wetabq.easyapi.screen.ShowType
 import top.wetabq.easyapi.task.PluginTaskEntry
+import top.wetabq.easyapi.utils.color
 import kotlin.math.floor
 
 object ScreenShowModule : SimpleEasyAPIModule() {
@@ -86,7 +87,7 @@ object ScreenShowModule : SimpleEasyAPIModule() {
         val iterator = (screenShowList.clone() as ArrayList<ScreenShow>).iterator()
         while (iterator.hasNext()) { // dont change to forEach
             val screenShow = iterator.next()
-            val nextLine = if (screenShow.exclusive) "" else "\n"
+            val nextLine = if (screenShow.exclusive) "" else "\n&r".color()
             if (screenShow.sendTime == -1L) {
                 screenShow.sendTime = System.currentTimeMillis()
                 if (screenShow.showType == ShowType.POPUP) addToCache(

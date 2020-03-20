@@ -16,8 +16,8 @@ abstract class EasySubCommand(val subCommandName: String) {
     fun safeExecute(sender: CommandSender, label: String, args: Array<out String>): Boolean {
         var optionalSize = 0
         this.getParameters()?.forEach { if(it.optional) optionalSize++ }
-        if (args.size - 1 <= (getParameters()?:arrayOf()).size && args.size - 1 >= (getParameters()?:arrayOf()).size - optionalSize) return false
-        return execute(sender, label, args)
+        if (args.size - 1 <= (getParameters()?:arrayOf()).size && args.size - 1 >= (getParameters()?:arrayOf()).size - optionalSize) return execute(sender, label, args)
+        return false
     }
 
 }
