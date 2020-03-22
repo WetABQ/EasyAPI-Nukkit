@@ -104,7 +104,7 @@ interface AsyncListener {
 
     fun onBlockFormEvent(event: BlockFormEvent) {}
 
-    fun onLeavesDecayEvent(event: LeavesDecayEvent)
+    fun onLeavesDecayEvent(event: LeavesDecayEvent) {}
 
 
 
