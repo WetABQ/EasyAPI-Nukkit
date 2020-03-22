@@ -63,6 +63,8 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
                         final = final
                             .replace(PERMISSION_GROUP_PREFIX_PLACEHOLDER, PermissionGroupAPI.getFix(data) ?: "")
                             .replace(PERMISSION_GROUP_SUFFIX_PLACEHOLDER, PermissionGroupAPI.getFix(data, false) ?: "")
+                    } else {
+                        final = final.replace(PERMISSION_GROUP_PREFIX_PLACEHOLDER, "").replace(PERMISSION_GROUP_SUFFIX_PLACEHOLDER, "")
                     }
                 }
                 return final
