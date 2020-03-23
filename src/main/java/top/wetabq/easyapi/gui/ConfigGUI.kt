@@ -90,9 +90,9 @@ class ConfigGUI<T>(
 
     private fun autoType(value: String): Any {
         return when {
-            value.contains(".") -> value.toDouble()
+            value.contains(Regex("""^-?\d+\.\d+""")) -> value.toDouble()
             value.contains(Regex("(true|false)")) -> value.toBoolean()
-            value.contains(Regex("-?[0-9]\\d*")) -> value.toInt()
+            value.contains(Regex("""^[+-]?\d+""")) -> value.toInt()
             else -> value
         }
     }
