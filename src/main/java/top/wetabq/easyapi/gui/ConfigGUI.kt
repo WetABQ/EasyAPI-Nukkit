@@ -92,7 +92,7 @@ class ConfigGUI<T>(
         return when {
             value.contains(".") -> value.toDouble()
             value.contains(Regex("(true|false)")) -> value.toBoolean()
-            value.contains(Regex("-?[0-9]\\d*")) -> value.toInt()
+            value.contains(Regex("""^[+-]?[0-9]\d*""")) -> value.toInt()
             else -> value
         }
     }
