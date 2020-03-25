@@ -11,7 +11,7 @@ class ConfigAPI: CommonDynamicIntegrateAPI<EasyConfig, ConfigAPI>() {
     }
 
     override fun removeInterface(t: EasyConfig): ConfigAPI {
-        t.save()
+        // t.save() - ATTENTION
         return this
     }
 

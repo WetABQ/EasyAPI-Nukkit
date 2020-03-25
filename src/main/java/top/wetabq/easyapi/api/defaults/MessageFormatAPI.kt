@@ -11,7 +11,9 @@ object MessageFormatAPI: SimpleIntegrateAPI {
         var msg = message
         data.forEach {
             formatters.forEach { (_, fs) ->
-                msg = fs[it.javaClass]?.parseFormat(message, it)?:msg
+                if (fs.containsKey(it.javaClass)) {
+                    msg = fs[it.javaClass]?.parseFormat(msg, it) ?: msg
+                }
             }
         }
         simpleFormatters.forEach {
@@ -38,6 +40,7 @@ object MessageFormatAPI: SimpleIntegrateAPI {
 interface MessageFormatter<T> {
 
     @Suppress("UNCHECKED_CAST")
+    //@JvmDefault // sb kotlin
     fun parseFormat(message: String, data: Any): String {
         val tempData = data as? T
             ?: throw IllegalArgumentException("Invalid type ${data.javaClass.name} passed to this parser")
