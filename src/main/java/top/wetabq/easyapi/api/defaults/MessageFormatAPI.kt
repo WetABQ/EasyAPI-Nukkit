@@ -1,11 +1,13 @@
 package top.wetabq.easyapi.api.defaults
 
+import cn.nukkit.Player
 import top.wetabq.easyapi.api.SimpleIntegrateAPI
 
 object MessageFormatAPI: SimpleIntegrateAPI {
 
     private val formatters = hashMapOf<String, HashMap<Class<*>, MessageFormatter<*>>>()
     private val simpleFormatters = arrayListOf<SimpleMessageFormatter>()
+    private val simplePlayerFormatters = arrayListOf<(String, Player) -> String>()
 
     fun format(message: String, vararg data: Any): String {
         var msg = message
@@ -13,6 +15,11 @@ object MessageFormatAPI: SimpleIntegrateAPI {
             formatters.forEach { (_, fs) ->
                 if (fs.containsKey(it.javaClass)) {
                     msg = fs[it.javaClass]?.parseFormat(msg, it) ?: msg
+                }
+            }
+            if (it is Player) {
+                simplePlayerFormatters.forEach { fs ->
+                    fs(msg, it)
                 }
             }
         }
@@ -33,6 +40,10 @@ object MessageFormatAPI: SimpleIntegrateAPI {
 
     fun registerSimpleFormatter(formatter: SimpleMessageFormatter) {
         simpleFormatters.add(formatter)
+    }
+
+    fun registerSimplePlayerFormatter(formatter: (String, Player) -> String) {
+        simplePlayerFormatters.add(formatter)
     }
 
 }

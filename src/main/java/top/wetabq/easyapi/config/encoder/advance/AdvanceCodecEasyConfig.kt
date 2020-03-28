@@ -6,8 +6,7 @@ import top.wetabq.easyapi.config.encoder.CodecEasyConfig
 
 abstract class AdvanceCodecEasyConfig<T>(
     configName:String,
-    plugin: Plugin,
-    private val defaultValue: T
+    plugin: Plugin
 ) : CodecEasyConfig<T>(configName, plugin),
     AdvanceConfigCodec<T> {
 
@@ -29,12 +28,4 @@ abstract class AdvanceCodecEasyConfig<T>(
         }
         configSection.putAll(encodeMap)
     }
-
-    fun safeGetData(key: String): T {
-        if (!simpleConfig.containsKey(key)) simpleConfig[key] = defaultValue
-        return simpleConfig[key]?:defaultValue
-    }
-
-    fun getDefaultValue(): T = defaultValue
-
 }

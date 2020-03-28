@@ -1,6 +1,7 @@
 package top.wetabq.easyapi.module.defaults
 
 import cn.nukkit.Player
+import cn.nukkit.Server
 import cn.nukkit.event.EventHandler
 import cn.nukkit.event.Listener
 import cn.nukkit.event.player.PlayerChatEvent
@@ -25,6 +26,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
 
     const val NAME_TAG_FORMAT_PATH = "nameTagFormat"
     const val CHAT_FORMAT_PATH = "chatFormat"
+    const val REFRESH_NAME_TAG_PERIOD_PATH = "refreshNameTagPeriod"
 
     const val EASY_NAME_TAG_PLACEHOLDER = "%easy_nametag%"
     const val PLAYER_NAME_PLACEHOLDER = "%player_name%"
@@ -46,9 +48,11 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
         val chatConfig = this.registerAPI(CHAT_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
             .add(SimpleConfigEntry(NAME_TAG_FORMAT_PATH, "$PERMISSION_GROUP_PREFIX_PLACEHOLDER &r&e$PLAYER_NAME_PLACEHOLDER&r $PERMISSION_GROUP_SUFFIX_PLACEHOLDER"))
             .add(SimpleConfigEntry(CHAT_FORMAT_PATH, "$EASY_NAME_TAG_PLACEHOLDER &r&c≫&r &7$CHAT_MESSAGE_PLACEHOLDER"))
+            .add(SimpleConfigEntry(REFRESH_NAME_TAG_PERIOD_PATH, 20))
 
         val nameTagFormat = chatConfig.getPathValue(NAME_TAG_FORMAT_PATH) as String
         val chatFormat = chatConfig.getPathValue(CHAT_FORMAT_PATH) as String
+        val refreshNameTagPeriod = (chatConfig.getPathValue(REFRESH_NAME_TAG_PERIOD_PATH) as String).toInt()
 
         val nameTagFormatter = object : MessageFormatter<String> {
             override fun format(message: String, data: String): String {
@@ -109,6 +113,15 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
                 }
 
             })
+
+
+
+        SimplePluginTaskAPI.repeating(refreshNameTagPeriod) { _, _ ->
+            getModuleInfo().moduleOwner.server.onlinePlayers.values.forEach { player ->
+                if (player.isAlive) player.nameTag = MessageFormatAPI.format(nameTagFormat.color(), player.name)
+            }
+        }
+
     }
 
     override fun moduleDisable() {

@@ -149,7 +149,7 @@ class ReflectionConfigCodec<T>(private val clazz: Class<T>) :
                 when {
                     Map::class.java.isAssignableFrom(it) -> {arrayList.add(reflectDecodeMap(mapValueList[index] as LinkedHashMap<String, *>, clazz.declaredFields[index].genericType as ParameterizedType))}
                     List::class.java.isAssignableFrom(it) -> arrayList.add(reflectDecodeList(mapValueList[index] as ArrayList<*>, (clazz.declaredFields[index].genericType as ParameterizedType)))
-                    else -> arrayList.add(it.cast(mapValueList[index]))
+                    else -> arrayList.add(mapValueList[index])
                 }
             } else {
                 arrayList.add(reflectDecode(mapValueList[index] as LinkedHashMap<String, *>, it))
