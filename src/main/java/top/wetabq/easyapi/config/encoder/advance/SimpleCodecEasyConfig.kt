@@ -26,6 +26,10 @@ abstract class SimpleCodecEasyConfig<T>(
 
     fun getDefaultValue(): T = magicClone(defaultValue)
 
+    fun setDefaultValue(obj: T) {
+        defaultValue = obj
+    }
+    
     private fun magicClone(obj: T): T {
         val stringProject = Gson().toJson(obj, clazzT)
         return Gson().fromJson<T>(stringProject, clazzT)
