@@ -52,7 +52,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
 
         val nameTagFormat = chatConfig.getPathValue(NAME_TAG_FORMAT_PATH) as String
         val chatFormat = chatConfig.getPathValue(CHAT_FORMAT_PATH) as String
-        val refreshNameTagPeriod = (chatConfig.getPathValue(REFRESH_NAME_TAG_PERIOD_PATH) as String).toInt()
+        val refreshNameTagPeriod = chatConfig.getPathValue(REFRESH_NAME_TAG_PERIOD_PATH).toString().toInt()
 
         val nameTagFormatter = object : MessageFormatter<String> {
             override fun format(message: String, data: String): String {
