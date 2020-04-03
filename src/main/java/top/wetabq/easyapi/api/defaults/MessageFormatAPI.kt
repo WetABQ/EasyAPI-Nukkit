@@ -19,7 +19,7 @@ object MessageFormatAPI: SimpleIntegrateAPI {
             }
             if (it is Player) {
                 simplePlayerFormatters.forEach { fs ->
-                    fs(msg, it)
+                    msg = fs(msg, it)
                 }
             }
         }

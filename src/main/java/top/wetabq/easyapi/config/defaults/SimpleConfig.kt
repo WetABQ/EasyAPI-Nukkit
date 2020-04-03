@@ -29,6 +29,7 @@ object SimpleConfig : CodecEasyConfig<Any>(
 
     fun setPathValue(path: String, plugin: Plugin, value: Any) {
         simpleConfig[getPath(path, plugin)] = value
+        save()
     }
 
     fun getPathValue(path: String, plugin: Plugin): Any? = simpleConfig[getPath(path, plugin)]
