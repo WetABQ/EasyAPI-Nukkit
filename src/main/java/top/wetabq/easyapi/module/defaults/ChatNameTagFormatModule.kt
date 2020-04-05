@@ -44,7 +44,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
         EasyAPI.INSTANCE,
         MODULE_NAME,
         AUTHOR,
-        ModuleVersion(1, 0, 0)
+        ModuleVersion(1, 0, 2)
     )
 
     override fun moduleRegister() {
@@ -90,8 +90,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
 
                 @EventHandler
                 fun onChatEvent(event: PlayerChatEvent) {
-                    EasyAPI.INSTANCE.server.broadcastMessage(MessageFormatAPI.format(chatFormat, event).color())
-                    event.setCancelled()
+                    event.format = MessageFormatAPI.format(chatFormat, event).color()
                 }
 
                 @EventHandler
