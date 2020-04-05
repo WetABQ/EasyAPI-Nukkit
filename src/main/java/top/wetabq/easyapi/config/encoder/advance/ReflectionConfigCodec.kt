@@ -95,7 +95,7 @@ class ReflectionConfigCodec<T>(private val clazz: Class<T>) :
             when {
                 valueType.actualTypeArguments[1] is ParameterizedType && (valueType.actualTypeArguments[1] as ParameterizedType).typeName.contains("LinkedHashMap") -> decodeMap[s] = reflectDecodeMap(any as LinkedHashMap<String, *>, valueType.actualTypeArguments[1] as ParameterizedType)
                 valueType.actualTypeArguments[1] is ParameterizedType && (valueType.actualTypeArguments[1] as ParameterizedType).typeName.contains("ArrayList") -> decodeMap[s] = reflectDecodeList(any as ArrayList<*>, valueType.actualTypeArguments[1] as ParameterizedType)
-                isJavaClass(valueType.actualTypeArguments[0] as Class<*>) -> decodeMap[s] = any
+                isJavaClass(valueType.actualTypeArguments[1] as Class<*>) -> decodeMap[s] = any
                 else -> {
                     decodeMap[s] = reflectDecode(any as LinkedHashMap<String, *>, valueType.actualTypeArguments[1] as Class<*>)
                     /*any.javaClass.declaredFields.forEach { field ->
@@ -142,14 +142,37 @@ class ReflectionConfigCodec<T>(private val clazz: Class<T>) :
 
     private fun reflectDecode(map: LinkedHashMap<String, *>, clazz: Class<out Any>): Any {
         val constructor = clazz.constructors[0]
-        val arrayList = arrayListOf<Any>()
+        val arrayList = arrayListOf<Any?>()
         val mapValueList = map.values.toList()
         constructor.parameterTypes.forEachIndexed { index, it ->
             if (isJavaClass(it)) {
                 when {
-                    Map::class.java.isAssignableFrom(it) -> arrayList.add(reflectDecodeMap(mapValueList[index] as LinkedHashMap<String, *>, clazz.declaredFields[index].genericType as ParameterizedType))
-                    List::class.java.isAssignableFrom(it) -> arrayList.add(reflectDecodeList(mapValueList[index] as ArrayList<*>, (clazz.declaredFields[index].genericType as ParameterizedType)))
-                    else -> arrayList.add(mapValueList[index])
+                    Map::class.java.isAssignableFrom(it) -> arrayList.add(
+                            reflectDecodeMap(
+                                    mapValueList[index] as LinkedHashMap<String, *>,
+                                    clazz.declaredFields[index].genericType as ParameterizedType
+                            )
+                    )
+                    List::class.java.isAssignableFrom(it) -> arrayList.add(
+                            reflectDecodeList(
+                                    mapValueList[index] as ArrayList<*>,
+                                    (clazz.declaredFields[index].genericType as ParameterizedType)
+                            )
+                    )
+                    else -> {
+                        if (index < mapValueList.size) {
+                            arrayList.add(mapValueList[index])
+                        } else {
+                            if (it.name.contains("DefaultConstructorMarker")) {
+                                /*val sbKotlin = Class.forName("kotlin.jvm.internal.DefaultConstructorMarker")
+                                    .getDeclaredConstructor()
+                                sbKotlin.isAccessible = true*/
+                                arrayList.add(null)
+                            } else {
+                                arrayList.add(1)
+                            }
+                        }
+                    }
                 }
             } else {
                 arrayList.add(reflectDecode(mapValueList[index] as LinkedHashMap<String, *>, it))

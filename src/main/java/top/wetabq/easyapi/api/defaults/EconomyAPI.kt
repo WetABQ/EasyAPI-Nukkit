@@ -18,7 +18,21 @@ object EconomyAPI : SimpleIntegrateAPI {
         }
     }
 
-    fun getMoney(player: Player): Double? {
+    fun getMoney(player: Player): Double? = getMoney(player.name)
+
+    fun addMoney(player: Player, amount: Double) {
+        addMoney(player.name, amount)
+    }
+
+    fun reduceMoney(player: Player, amount: Double) {
+        reduceMoney(player.name, amount)
+    }
+
+    fun setMoney(player: Player, amount: Double) {
+        setMoney(player.name, amount)
+    }
+
+    fun getMoney(player: String): Double? {
         return compatibilityCheck.doCompatibilityAction(mapOf(
             ECONOMY_API to {
                 EconomyAPI.getInstance().myMoney(player)
@@ -26,7 +40,7 @@ object EconomyAPI : SimpleIntegrateAPI {
         ))
     }
 
-    fun addMoney(player: Player, amount: Double) {
+    fun addMoney(player: String, amount: Double) {
         compatibilityCheck.doCompatibilityAction(mapOf(
             ECONOMY_API to {
                 EconomyAPI.getInstance().addMoney(player, amount)
@@ -34,7 +48,7 @@ object EconomyAPI : SimpleIntegrateAPI {
         ))
     }
 
-    fun reduceMoney(player: Player, amount: Double) {
+    fun reduceMoney(player: String, amount: Double) {
         compatibilityCheck.doCompatibilityAction(mapOf(
             ECONOMY_API to {
                 EconomyAPI.getInstance().reduceMoney(player, amount)
@@ -42,12 +56,13 @@ object EconomyAPI : SimpleIntegrateAPI {
         ))
     }
 
-    fun setMoney(player: Player, amount: Double) {
+    fun setMoney(player: String, amount: Double) {
         compatibilityCheck.doCompatibilityAction(mapOf(
             ECONOMY_API to {
                 EconomyAPI.getInstance().setMoney(player, amount)
             }
         ))
     }
+
 
 }

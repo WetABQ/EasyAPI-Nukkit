@@ -8,6 +8,7 @@ import cn.nukkit.event.player.PlayerChatEvent
 import cn.nukkit.event.player.PlayerDeathEvent
 import cn.nukkit.event.player.PlayerJoinEvent
 import cn.nukkit.event.player.PlayerRespawnEvent
+import cn.nukkit.scheduler.PluginTask
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.defaults.*
 import top.wetabq.easyapi.config.defaults.SimpleConfigEntry
@@ -36,6 +37,8 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
 
     const val NAME_TAG_FORMATTER = "nameTagFormatter"
     const val CHAT_FORMATTER = "chatFormatter"
+
+    lateinit var nameTagChangeTask: PluginTask<*>
 
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
         EasyAPI.INSTANCE,
@@ -116,7 +119,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
 
 
 
-        SimplePluginTaskAPI.repeating(refreshNameTagPeriod) { _, _ ->
+        nameTagChangeTask = SimplePluginTaskAPI.repeating(refreshNameTagPeriod) { _, _ ->
             getModuleInfo().moduleOwner.server.onlinePlayers.values.forEach { player ->
                 if (player.isAlive) player.nameTag = MessageFormatAPI.format(nameTagFormat.color(), player.name)
             }
@@ -125,7 +128,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
     }
 
     override fun moduleDisable() {
-
+        nameTagChangeTask.cancel()
     }
 
 

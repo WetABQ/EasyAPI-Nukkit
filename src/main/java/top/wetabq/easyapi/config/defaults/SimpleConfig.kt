@@ -36,6 +36,6 @@ object SimpleConfig : CodecEasyConfig<Any>(
 
     fun directlyGetPathValue(path: String): Any? = simpleConfig[path]
 
-    fun getPath(path: String, plugin: Plugin) : String = plugin.description.name + path
+    fun getPath(path: String, plugin: Plugin) : String = plugin.description.name + if(path.startsWith(".")) path else ".$path"
 
 }

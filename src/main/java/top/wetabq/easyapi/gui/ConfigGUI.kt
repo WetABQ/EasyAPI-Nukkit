@@ -57,7 +57,7 @@ class ConfigGUI<T>(
                 .forEach { value -> params.add(value) }
             try {
                 val clazz = simpleCodecEasyConfig.clazzT
-                val arrayParam = arrayListOf<Any>()
+                val arrayParam = arrayListOf<Any?>()
                 params.forEach { param -> arrayParam.add(autoType(param.toString())) }
                 if (translatedMap.isNotEmpty()) {
                     translatedMap.forEach { (key, value) ->
@@ -68,6 +68,10 @@ class ConfigGUI<T>(
                             arrayParam.add(field.get(obj))
                         }
                     }
+                }
+                if (arrayParam.toArray().size < clazz.constructors[0].parameterTypes.size) { //sbKotlin
+                    arrayParam.add(1)
+                    arrayParam.add(null)
                 }
                 val newDataObj = clazz.constructors[0].newInstance(*arrayParam.toArray()) as T
                 if (id is String) {
