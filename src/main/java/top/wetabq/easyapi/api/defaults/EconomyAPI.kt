@@ -12,12 +12,6 @@ object EconomyAPI : SimpleIntegrateAPI {
 
     val compatibilityCheck = CompatibilityCheck(listOf(ECONOMY_API))
 
-    init {
-        SimplePluginTaskAPI.delay(20) { _, _ ->
-            compatibilityCheck.check()
-        }
-    }
-
     fun getMoney(player: Player): Double? = getMoney(player.name)
 
     fun addMoney(player: Player, amount: Double) {

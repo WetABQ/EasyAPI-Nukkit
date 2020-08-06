@@ -12,7 +12,7 @@ import java.lang.reflect.Field
 import kotlin.math.min
 
 /**
- * WARN: Use the lib gui.jar by Him188
+ * WARN: Use the lib gui.jar @author by Him188
  */
 class ConfigGUI<T>(
     private val simpleCodecEasyConfig: SimpleCodecEasyConfig<T>,

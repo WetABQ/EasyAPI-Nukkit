@@ -20,12 +20,6 @@ object PermissionGroupAPI : SimpleIntegrateAPI {
         MULTI_PASS
     ))
 
-    init {
-        SimplePluginTaskAPI.delay(20) { _, _ ->
-            compatibilityCheck.check()
-        }
-    }
-
 
     fun addPlayerToGroup(player: String, groupName: String) {
         compatibilityCheck.doCompatibilityAction(mapOf(

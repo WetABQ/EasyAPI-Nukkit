@@ -4,7 +4,7 @@ import top.wetabq.easyapi.EasyAPI
 
 class CompatibilityCheck(private val providers: List<String>) {
 
-    private var finalKey = ""
+    private var finalKey = "-1"
 
     fun check() {
         // TODO: Check server started
@@ -13,11 +13,13 @@ class CompatibilityCheck(private val providers: List<String>) {
                 finalKey = plugin
             }
         }
+        if (finalKey == "-1") finalKey = ""
     }
 
 
     fun <T> doCompatibilityAction(compatibleAction: Map<String, () -> T>): T? {
         var finalValue: T? = null
+        if (finalKey == "-1") check()
         if (finalKey != "") {
             compatibleAction.forEach { (key, action) ->
                 if (key == finalKey)  {

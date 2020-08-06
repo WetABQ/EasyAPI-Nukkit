@@ -218,7 +218,7 @@ class MerticsLite(var plugin: Plugin) {
         const val B_STATS_VERSION = 1
 
         // The url to which the data is sent
-        private val URL = "https://bStats.org/submitData/bukkit"
+        private const val URL = "https://bStats.org/submitData/bukkit"
 
     }
 
