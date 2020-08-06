@@ -1,7 +1,8 @@
-package top.wetabq.easyapi.config.encoder.advance
+package top.wetabq.easyapi.config.encoder.advance.internal
 
 import java.lang.reflect.ParameterizedType
 
+@Deprecated(message = "Too many problems, give up maintenance")
 @Suppress("UNCHECKED_CAST")
 class ReflectionConfigCodec<T>(private val clazz: Class<T>) :
     AdvanceConfigCodec<T> {

@@ -82,7 +82,7 @@ abstract class EasyCommand(private val command: String, description: String = "E
     // /eapi xxxx <argName: argType> [argName: argType]
 
     open fun sendHelp(sender: CommandSender) {
-        sender.sendMessage(TextFormat.GOLD.toString() + "------Help------")
+        sender.sendMessage("${TextFormat.GOLD}------Help------")
         subCommand.forEach { sc ->
             var str = StringBuilder()
             sc.getAliases()?.forEach {aliases -> str.append("$aliases|") }

@@ -1,8 +1,9 @@
-package top.wetabq.easyapi.config.encoder.advance
+package top.wetabq.easyapi.config.encoder.advance.internal
 
 
 @Suppress("UNCHECKED_CAST")
-class SimpleReflectionConfigCodec<T>(private val clazz: Class<T>) : AdvanceConfigCodec<T> {
+class SimpleReflectionConfigCodec<T>(private val clazz: Class<T>) :
+    AdvanceConfigCodec<T> {
 
     override fun encode(obj: T): LinkedHashMap<String, *> {
         return reflectEncode(obj as Any, clazz as Class<out Any>)

@@ -3,6 +3,7 @@ package top.wetabq.easyapi.config.encoder.advance
 import cn.nukkit.plugin.Plugin
 import cn.nukkit.utils.ConfigSection
 import top.wetabq.easyapi.config.encoder.CodecEasyConfig
+import top.wetabq.easyapi.config.encoder.advance.internal.AdvanceConfigCodec
 
 abstract class AdvanceCodecEasyConfig<T>(
     configName:String,

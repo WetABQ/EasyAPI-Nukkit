@@ -3,35 +3,53 @@ package top.wetabq.easyapi.config
 import cn.nukkit.plugin.Plugin
 import cn.nukkit.utils.Config
 import cn.nukkit.utils.ConfigSection
+import java.util.concurrent.locks.ReentrantLock
 
 abstract class EasyConfig(configName:String, plugin: Plugin) : IEasyConfig {
 
     private var config: Config = Config("${plugin.dataFolder}/$configName.yml", Config.YAML)
     protected var configSection: ConfigSection
 
+    protected val configLock = ReentrantLock()
+
     init {
         this.configSection = config.rootSection
     }
 
     override fun init() {
-        if (isEmpty()) spawnDefaultConfig() else initFromConfigSecion(configSection)
+        configLock.lock()
+        try {
+            if (isEmpty()) spawnDefaultConfig() else initFromConfigSecion(configSection)
+        } finally {
+            configLock.unlock()
+        }
     }
 
     override fun spawnDefaultConfig() {
-        if (isEmpty()) {
-            spawnDefault(configSection)
+        configLock.lock()
+        try {
+            if (isEmpty()) {
+                spawnDefault(configSection)
+            }
+            init()
+            save()
+        } finally {
+            configLock.unlock()
         }
-        init()
-        save()
     }
 
     override fun save() {
-        if (!isEmpty())  {
-            saveToConfigSection(configSection)
-            config.setAll(configSection)
-            config.save()
-        } else {
-            spawnDefaultConfig()
+        configLock.lock()
+        try {
+            if (!isEmpty()) {
+                saveToConfigSection(configSection)
+                config.setAll(configSection)
+                config.save()
+            } else {
+                spawnDefaultConfig()
+            }
+        } finally {
+            configLock.unlock()
         }
     }
 

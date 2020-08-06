@@ -1,4 +1,4 @@
-package top.wetabq.easyapi.config.encoder.advance
+package top.wetabq.easyapi.config.encoder.advance.internal
 
 import top.wetabq.easyapi.config.encoder.ConfigCodec
 

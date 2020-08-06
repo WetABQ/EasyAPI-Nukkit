@@ -1,10 +1,11 @@
 package top.wetabq.easyapi.module
 
 import top.wetabq.easyapi.api.DynamicIntegrateAPI
+import java.util.concurrent.ConcurrentHashMap
 
 abstract class EasyAPIModule: IEasyAPIModule {
 
-    private val integrateAPIs = HashMap<String, DynamicIntegrateAPI<*, *>>()
+    private val integrateAPIs = ConcurrentHashMap<String, DynamicIntegrateAPI<*, *>>()
 
     override fun <I: DynamicIntegrateAPI<*, *>> registerAPI(identifier: String, integrateAPI: I): I {
         integrateAPIs[identifier] = integrateAPI

@@ -2,9 +2,15 @@ package top.wetabq.easyapi.config.encoder.advance
 
 import cn.nukkit.plugin.Plugin
 import com.google.gson.Gson
+import top.wetabq.easyapi.config.encoder.advance.internal.AdvanceConfigCodec
+import top.wetabq.easyapi.config.encoder.advance.internal.ReflectionConfigCodec
 
+@Deprecated(
+    message = "Too many problems, give up maintenance. Files may be overwritten or be filled with null, data is not safe",
+    replaceWith = ReplaceWith("GsonCodecEasyConfig")
+)
 abstract class SimpleCodecEasyConfig<T>(
-    configName:String,
+    configName: String,
     val plugin: Plugin,
     val clazzT: Class<T>,
     private val defaultValue: T,

@@ -1,7 +1,6 @@
 package top.wetabq.easyapi.module.defaults
 
 import cn.nukkit.Player
-import cn.nukkit.Server
 import cn.nukkit.event.EventHandler
 import cn.nukkit.event.Listener
 import cn.nukkit.event.player.PlayerChatEvent
@@ -38,6 +37,8 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
     const val NAME_TAG_FORMATTER = "nameTagFormatter"
     const val CHAT_FORMATTER = "chatFormatter"
 
+    lateinit var chatConfig: SimpleConfigAPI
+
     lateinit var nameTagChangeTask: PluginTask<*>
 
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
@@ -48,7 +49,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
     )
 
     override fun moduleRegister() {
-        val chatConfig = this.registerAPI(CHAT_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
+        chatConfig = this.registerAPI(CHAT_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
             .add(SimpleConfigEntry(NAME_TAG_FORMAT_PATH, "$PERMISSION_GROUP_PREFIX_PLACEHOLDER &r&e$PLAYER_NAME_PLACEHOLDER&r $PERMISSION_GROUP_SUFFIX_PLACEHOLDER"))
             .add(SimpleConfigEntry(CHAT_FORMAT_PATH, "$EASY_NAME_TAG_PLACEHOLDER &r&c≫&r &7$CHAT_MESSAGE_PLACEHOLDER"))
             .add(SimpleConfigEntry(REFRESH_NAME_TAG_PERIOD_PATH, 20))
