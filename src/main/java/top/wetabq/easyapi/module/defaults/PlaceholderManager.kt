@@ -93,7 +93,46 @@ object PlaceholderManager : SimpleEasyAPIModule() {
                 } else {
                     ""
                 }
-            }
+            },
+            placeholderDescription = linkedMapOf(
+                "ping" to "ping",
+                "colored_ping" to "colored ping",
+                "name" to "name",
+                "uuid" to "uuid",
+                "has_played_before" to "has played before",
+                "online" to "online",
+                "is_whitelisted" to "is whitelisted",
+                "is_banned" to "is banned",
+                "is_op" to "is op",
+                "first_played" to "first played",
+                "last_played" to "last played",
+                "spawn_x" to "spawn x",
+                "spawn_y" to "spawn y",
+                "spawn_z" to "spawn z",
+                "world_spawn" to "world spawn",
+                "servername" to "servername",
+                "displayname" to "displayname",
+                "gamemode" to "gamemode",
+                "direction" to "direction",
+                "world" to "world",
+                "x" to "x",
+                "y" to "y",
+                "z" to "z",
+                "ip" to "ip",
+                "allow_flight" to "allow flight",
+                "exp" to "exp",
+                "exp_level" to "exp level",
+                "food_level" to "food level",
+                "health" to "health",
+                "health_rounded" to "health rounded",
+                "max_health" to "max health",
+                "item_in_hand" to "item in hand",
+                "ticks_lived" to "ticks lived",
+                "seconds_lived" to "seconds lived",
+                "minutes_lived" to "minutes lived",
+                "speed" to "speed",
+                "world_time" to "world time"
+            )
         ).register()
 
         this.registerAPI(PLACEHOLDER_COMMAND, CommandAPI())
