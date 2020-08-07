@@ -14,9 +14,11 @@ import top.wetabq.easyapi.module.SimpleEasyAPIModule
 import top.wetabq.easyapi.placeholder.PlaceholderException
 import top.wetabq.easyapi.placeholder.PlaceholderExpansion
 import top.wetabq.easyapi.placeholder.SimplePlaceholder
+import top.wetabq.easyapi.player.getCardinalDirection
 import top.wetabq.easyapi.utils.color
 import java.util.concurrent.ConcurrentHashMap
 import java.util.regex.Pattern
+import kotlin.math.roundToInt
 
 object PlaceholderManager : SimpleEasyAPIModule() {
 
@@ -50,14 +52,47 @@ object PlaceholderManager : SimpleEasyAPIModule() {
                         "ping" -> player.ping.toString()
                         "colored_ping" -> "&${if (player.ping > 100) "c" else if (player.ping > 50) "e" else "a"}${player.ping}"
                         "name" -> player.name
-
+                        "uuid" -> player.uniqueId.toString()
+                        "has_played_before" -> player.hasPlayedBefore().customToString()
+                        "online" -> player.isOnline.customToString()
+                        "is_whitelisted" -> player.isWhitelisted.customToString()
+                        "is_banned" -> player.isBanned.customToString()
+                        "is_op" -> player.isOp.customToString()
+                        "first_played" -> player.firstPlayed.toString()
+                        "last_played" -> player.lastPlayed.toString()
+                        "spawn_x" -> player.spawn.x.toInt().toString()
+                        "spawn_y" -> player.spawn.y.toInt().toString()
+                        "spawn_z" -> player.spawn.z.toInt().toString()
+                        "world_spawn" -> player.level.spawnLocation.toString()
+                        "servername" -> player.level.server.name
+                        "displayname" -> player.displayName
+                        "gamemode" -> player.gamemode.toString()
+                        "direction" -> player.getCardinalDirection()
+                        "world" -> player.level.name
+                        "x" -> player.x.toInt().toString()
+                        "y" -> player.y.toInt().toString()
+                        "z" -> player.z.toInt().toString()
+                        "ip" -> player.address
+                        "allow_flight" -> player.allowFlight.customToString()
+                        "exp" -> player.experience.toString()
+                        "exp_level" -> player.experienceLevel.toString()
+                        "food_level" -> player.foodData.foodSaturationLevel.toInt().toString()
+                        "health" -> player.health.toString()
+                        "health_rounded" -> player.health.roundToInt().toString()
+                        "max_health" -> player.maxHealth.toString()
+                        "item_in_hand" -> player.inventory.itemInHand.name
+                        "ticks_lived" -> player.ticksLived.toString()
+                        "seconds_lived" -> player.ticksLived.div(20).toString()
+                        "minutes_lived" -> player.ticksLived.div(20*60).toString()
+                        "speed" -> player.movementSpeed.toInt().toString()
+                        "world_time" -> player.level.time.toString()
                         else -> "&cNON EXIST PLACEHOLDER"
                     }
                 } else {
                     ""
                 }
             }
-        )
+        ).register()
 
         this.registerAPI(PLACEHOLDER_COMMAND, CommandAPI())
             .add(object : EasyCommand("placeholder") {
@@ -127,5 +162,7 @@ object PlaceholderManager : SimpleEasyAPIModule() {
     fun unregisterAllPlaceholderExpansion() {
         placeholderExpansions.keys.forEach { unregisterPlaceholderExpansion(it) }
     }
+
+    private fun Boolean.customToString() : String = if(this) "是" else "否"
 
 }
