@@ -244,6 +244,44 @@ object PlaceholderManager : SimpleEasyAPIModule() {
             )
         ).register()
 
+        datePlaceholderExpansion = SimplePlaceholder(
+            owner = this,
+            identifier = DATE_PLACEHOLDER_IDENTIFIER,
+            onRequestFunc = { _, identifier ->
+                val calendar = Calendar.getInstance()
+                val year = calendar.get(Calendar.YEAR).toString()
+                val month = calendar.get(Calendar.MONTH).plus(1).toString()
+                val day = calendar.get(Calendar.DAY_OF_MONTH).toString()
+                val date = "${year}/${month}/${day}"
+                val hour = calendar.get(Calendar.HOUR_OF_DAY).toString()
+                val minute = calendar.get(Calendar.MINUTE).toString()
+                val second = calendar.get(Calendar.SECOND).toString()
+                val time = "${hour}:${minute}:${second}"
+
+                when (identifier) {
+                    "date" -> date
+                    "year" -> year
+                    "month" -> month
+                    "day" -> day
+                    "time" -> time
+                    "hour" -> hour
+                    "minute" -> minute
+                    "second" -> second
+                    else -> "&cNON EXIST PLACEHOLDER"
+                }
+            },
+            placeholderDescription = linkedMapOf(
+                "date" to "date",
+                "year" to "year",
+                "month" to "month",
+                "day" to "day",
+                "time" to "time",
+                "hour" to "hour",
+                "minute" to "minute",
+                "second" to "second"
+            )
+        ).register()
+
         mathPlaceholderExpansion = SimplePlaceholder(
             owner = this,
             identifier = MATH_PLACEHOLDER_IDENTIFIER,
