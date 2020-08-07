@@ -1,16 +1,16 @@
 package top.wetabq.easyapi.api.defaults
 
 import top.wetabq.easyapi.api.CommonDynamicIntegrateAPI
-import top.wetabq.easyapi.config.EasyConfig
+import top.wetabq.easyapi.config.IEasyConfig
 
-class ConfigAPI: CommonDynamicIntegrateAPI<EasyConfig, ConfigAPI>() {
+class ConfigAPI: CommonDynamicIntegrateAPI<IEasyConfig, ConfigAPI>() {
 
 
-    override fun addInterface(t: EasyConfig): ConfigAPI {
+    override fun addInterface(t: IEasyConfig): ConfigAPI {
         return this
     }
 
-    override fun removeInterface(t: EasyConfig): ConfigAPI {
+    override fun removeInterface(t: IEasyConfig): ConfigAPI {
         // t.save() - ATTENTION
         return this
     }

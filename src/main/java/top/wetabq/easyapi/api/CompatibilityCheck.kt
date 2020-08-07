@@ -30,6 +30,9 @@ class CompatibilityCheck(private val providers: List<String>) {
         return finalValue
     }
 
-    fun isCompatible(): Boolean = (finalKey != "")
+    fun isCompatible(): Boolean {
+        if (finalKey == "-1") check()
+        return (finalKey != "")
+    }
 
 }

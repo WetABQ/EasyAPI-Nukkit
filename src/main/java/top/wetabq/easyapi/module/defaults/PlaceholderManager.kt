@@ -13,6 +13,7 @@ import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule
 import top.wetabq.easyapi.placeholder.PlaceholderException
 import top.wetabq.easyapi.placeholder.PlaceholderExpansion
+import top.wetabq.easyapi.placeholder.SimplePlaceholder
 import top.wetabq.easyapi.utils.color
 import java.util.concurrent.ConcurrentHashMap
 import java.util.regex.Pattern
@@ -23,6 +24,10 @@ object PlaceholderManager : SimpleEasyAPIModule() {
     const val AUTHOR = "WetABQ"
 
     const val PLACEHOLDER_COMMAND = "placeholderCommand"
+    const val PLAYER_PLACEHOLDER_IDENTIFIER = "player"
+    const val MATH_PLACEHOLDER_IDENTIFIER = "math"
+
+    lateinit var playerPlaceholderExpansion: PlaceholderExpansion
 
     private val placeholderExpansions = ConcurrentHashMap<String, PlaceholderExpansion>()
     private val expansionPattern = ConcurrentHashMap<String, Pattern>()
@@ -35,6 +40,25 @@ object PlaceholderManager : SimpleEasyAPIModule() {
     )
 
     override fun moduleRegister() {
+
+        playerPlaceholderExpansion = SimplePlaceholder(
+            owner = this,
+            identifier = PLAYER_PLACEHOLDER_IDENTIFIER,
+            onRequestFunc = { player, identifier ->
+                if (player is Player) {
+                    when(identifier) {
+                        "ping" -> player.ping.toString()
+                        "colored_ping" -> "&${if (player.ping > 100) "c" else if (player.ping > 50) "e" else "a"}${player.ping}"
+                        "name" -> player.name
+
+                        else -> "&cNON EXIST PLACEHOLDER"
+                    }
+                } else {
+                    ""
+                }
+            }
+        )
+
         this.registerAPI(PLACEHOLDER_COMMAND, CommandAPI())
             .add(object : EasyCommand("placeholder") {
 
@@ -87,7 +111,7 @@ object PlaceholderManager : SimpleEasyAPIModule() {
 
     fun registerPlaceholderExpansion(expansion: PlaceholderExpansion) {
         if (expansion.canRegister()) {
-            if (placeholderExpansions.contains(expansion.getIdentifier())) EasyAPI.INSTANCE.logger.warning("Repeated placeholder registration detected.")
+            if (placeholderExpansions.contains(expansion.getIdentifier())) getModuleInfo().moduleOwner.logger.warning("Repeated placeholder registration detected.")
             placeholderExpansions[expansion.getIdentifier()] = expansion
             expansionPattern[expansion.getIdentifier()] = Pattern.compile("%${expansion.getIdentifier()}_([^%]+)%")
         } else throw PlaceholderException(expansion.getOwner(), "can't register the corresponding placeholder, the necessary plugins or dependencies may be missing.")

@@ -3,6 +3,10 @@ package top.wetabq.easyapi.api.defaults
 import cn.nukkit.Player
 import top.wetabq.easyapi.api.SimpleIntegrateAPI
 
+@Deprecated(
+    message = "Too many problems, and not enough convenient, give up maintenance.",
+    replaceWith = ReplaceWith("SimplePlaceholder")
+)
 object MessageFormatAPI: SimpleIntegrateAPI {
 
     private val formatters = hashMapOf<String, HashMap<Class<*>, MessageFormatter<*>>>()
@@ -48,6 +52,10 @@ object MessageFormatAPI: SimpleIntegrateAPI {
 
 }
 
+@Deprecated(
+    message = "Too many problems, and not enough convenient, give up maintenance.",
+    replaceWith = ReplaceWith("SimplePlaceholder")
+)
 interface MessageFormatter<T> {
 
     @Suppress("UNCHECKED_CAST")
@@ -62,6 +70,10 @@ interface MessageFormatter<T> {
 
 }
 
+@Deprecated(
+    message = "Too many problems, and not enough convenient, give up maintenance.",
+    replaceWith = ReplaceWith("SimplePlaceholder")
+)
 interface SimpleMessageFormatter {
 
     fun format(message: String): String
