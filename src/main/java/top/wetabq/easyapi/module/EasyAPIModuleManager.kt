@@ -2,10 +2,7 @@ package top.wetabq.easyapi.module
 
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.DisableNotRemoveAll
-import top.wetabq.easyapi.module.defaults.AsyncListenerModule
-import top.wetabq.easyapi.module.defaults.ChatNameTagFormatModule
-import top.wetabq.easyapi.module.defaults.EasyBaseModule
-import top.wetabq.easyapi.module.defaults.ScreenShowModule
+import top.wetabq.easyapi.module.defaults.*
 import java.util.concurrent.ConcurrentHashMap
 
 object EasyAPIModuleManager {
@@ -24,6 +21,7 @@ object EasyAPIModuleManager {
         register(ChatNameTagFormatModule)
         register(AsyncListenerModule)
         register(ScreenShowModule)
+        register(PlaceholderManager)
     }
 
     fun disable(module: IEasyAPIModule) {

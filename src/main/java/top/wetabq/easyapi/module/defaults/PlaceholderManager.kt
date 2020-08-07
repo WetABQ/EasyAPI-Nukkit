@@ -18,6 +18,7 @@ import top.wetabq.easyapi.utils.color
 import java.util.concurrent.ConcurrentHashMap
 import java.util.regex.Pattern
 
+
 object PlaceholderManager : SimpleEasyAPIModule() {
 
     const val MODULE_NAME = "PlaceholderManager"
@@ -71,10 +72,11 @@ object PlaceholderManager : SimpleEasyAPIModule() {
                                 placeholderExpansions.values.forEach {
                                     it.getPlaceholderDescription().forEach { (valueIdentifier, description) ->
                                         // e.g: - %easyapi_version% -- represents the EasyAPI plugin version
-                                        append("${TextFormat.AQUA}- ${TextFormat.BOLD}${TextFormat.RED}%${it.getIdentifier()}_${valueIdentifier}% ${TextFormat.DARK_GRAY}-- ${TextFormat.GRAY}$description")
+                                        append("${TextFormat.AQUA}- ${TextFormat.BOLD}${TextFormat.RED}${it.getPlaceholderExpression(valueIdentifier)} ${TextFormat.DARK_GRAY}-- ${TextFormat.GRAY}$description\n")
                                     }
                                 }
                             }
+                            sender.sendMessage(s)
                             return true
                         }
 
@@ -100,7 +102,7 @@ object PlaceholderManager : SimpleEasyAPIModule() {
         expansionPattern.forEach { (identifier, pattern) ->
             var m = pattern.matcher(final)
             while (m.find()) {
-                final = content.replace(m.group(0), placeholderExpansions[identifier]?.onRequest(player, m.group(1))?:"${TextFormat.RED}ERROR_PLACEHOLDER")
+                final = final.replace(m.group(0), placeholderExpansions[identifier]?.onRequest(player, m.group(1))?:"${TextFormat.RED}ERROR_PLACEHOLDER")
                 m = pattern.matcher(final)
             }
         }

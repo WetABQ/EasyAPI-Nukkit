@@ -7,7 +7,7 @@ class SimplePlaceholder(
     private val owner: IEasyAPIModule,
     private val identifier: String,
     private val onRequestFunc: (Player?, String) -> String?,
-    private val placeholderDescription: Map<String, String> = hashMapOf(),
+    private val placeholderDescription: LinkedHashMap<String, String> = linkedMapOf(),
     private val canRegisterFunc: () -> Boolean = {true}
 ): AbstractPlaceholderExpansion() {
 
@@ -17,7 +17,7 @@ class SimplePlaceholder(
 
     override fun getIdentifier(): String = identifier
 
-    override fun getPlaceholderDescription(): Map<String, String> = placeholderDescription
+    override fun getPlaceholderDescription(): LinkedHashMap<String, String> = placeholderDescription
 
     override fun onRequest(player: Player?, valueIdentifier: String): String? = onRequestFunc(player, valueIdentifier)
 

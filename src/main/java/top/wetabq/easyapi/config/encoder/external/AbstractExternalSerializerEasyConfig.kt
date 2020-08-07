@@ -38,7 +38,7 @@ abstract class AbstractExternalSerializerEasyConfig<T>(
         return if (configData != null) {
             configData as T
         } else {
-            spawnDefault(configSection);
+            spawnDefault(configSection)
             safeGet()
         }
     }

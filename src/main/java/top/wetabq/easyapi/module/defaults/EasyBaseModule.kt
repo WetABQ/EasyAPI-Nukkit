@@ -13,6 +13,8 @@ import top.wetabq.easyapi.module.EasyAPIModuleManager
 import top.wetabq.easyapi.module.ModuleInfo
 import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule
+import top.wetabq.easyapi.placeholder.PlaceholderExpansion
+import top.wetabq.easyapi.placeholder.SimplePlaceholder
 import top.wetabq.easyapi.utils.color
 
 object EasyBaseModule: SimpleEasyAPIModule() {
@@ -28,6 +30,11 @@ object EasyBaseModule: SimpleEasyAPIModule() {
     const val TITLE_PATH = "title"
     const val MODULE_PATH = "module"
 
+    const val PLACEHOLDER_EASYAPI = "easyapi"
+
+    lateinit var easyAPIPlaceholder: PlaceholderExpansion
+    lateinit var easyAPIConfig: SimpleConfigAPI
+
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
         EasyAPI.INSTANCE,
         MODULE_NAME,
@@ -35,6 +42,8 @@ object EasyBaseModule: SimpleEasyAPIModule() {
         ModuleVersion(1,0,0)
     )
 
+    fun getTitle(): String = easyAPIConfig.getPathValue(TITLE_PATH).toString()
+    fun setTitle(new: String) = easyAPIConfig.setPathValue(SimpleConfigEntry(TITLE_PATH, new))
 
     override fun moduleRegister() {
         this.registerAPI(SIMPLE_COMMAND, CommandAPI())
@@ -42,7 +51,8 @@ object EasyBaseModule: SimpleEasyAPIModule() {
         this.registerAPI(SIMPLE_CONFIG, ConfigAPI())
             .add(SimpleConfig)
         SimpleConfig.init()
-        val easyAPIConfig = this.registerAPI(EASY_API_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
+
+        easyAPIConfig = this.registerAPI(EASY_API_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
             .add(SimpleConfigEntry(TITLE_PATH, "&c[&eEasy&aAPI&c]".color()))
 
         this.registerAPI(UNREGISTER_MODULE_TASK, AsyncTaskAPI(this.getModuleInfo().moduleOwner))
@@ -56,7 +66,20 @@ object EasyBaseModule: SimpleEasyAPIModule() {
                 }
             })
 
-        EasyAPI.TITLE = easyAPIConfig.getPathValue(TITLE_PATH) as String
+        EasyAPI.TITLE = getTitle()
+
+        easyAPIPlaceholder = SimplePlaceholder(
+            owner = this,
+            identifier = PLACEHOLDER_EASYAPI,
+            onRequestFunc = { _, identifier ->
+                when(identifier) {
+                    "version" -> EasyAPI.VERSION
+                    "git_version" -> EasyAPI.GIT_VERSION
+                    "title" -> EasyAPI.TITLE
+                    else -> "&cNON EXIST PLACEHOLDER"
+                }
+            }
+        ).register()
 
     }
 

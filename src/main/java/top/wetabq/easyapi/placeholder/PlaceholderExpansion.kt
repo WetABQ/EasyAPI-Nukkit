@@ -3,6 +3,8 @@ package top.wetabq.easyapi.placeholder
 import cn.nukkit.Player
 import top.wetabq.easyapi.module.IEasyAPIModule
 
+fun String.getPlaceholderExpression(identifier: String): String = "%${identifier}_$this%"
+
 interface PlaceholderExpansion {
 
     /**
@@ -10,7 +12,7 @@ interface PlaceholderExpansion {
      * Instead, if you have some dependency, you need to determine whether the dependency exists
      *
      * @return can be registered by PlaceholderManager?
-     * @see PlaceholderManager
+     * @see top.wetabq.easyapi.module.defaults.PlaceholderManager
      */
     fun canRegister(): Boolean
 
@@ -42,7 +44,7 @@ interface PlaceholderExpansion {
      *
      * @return a map contains (value identifier -> description).
      */
-    fun getPlaceholderDescription(): Map<String, String>
+    fun getPlaceholderDescription(): LinkedHashMap<String, String>
 
     /**
      * This is the method called when a placeholder with your identifier is found and needs a value to replace it.
@@ -60,5 +62,10 @@ interface PlaceholderExpansion {
      * This is the method called when the placeholder is required unregister.
      */
     fun onUnregister()
+
+    /**
+     * get placeholder expression as normal string
+     */
+    fun getPlaceholderExpression(valueIdentifier: String): String
 
 }

@@ -22,6 +22,6 @@ abstract class AbstractPlaceholderExpansion : PlaceholderExpansion {
 
     override fun getValueIdentifierList(): Collection<String> = getPlaceholderDescription().keys
 
-    fun getPlaceholderExpression(valueIdentifier: String) = "%${getIdentifier()}_$valueIdentifier%"
+    override fun getPlaceholderExpression(valueIdentifier: String): String = valueIdentifier.getPlaceholderExpression(getIdentifier())
 
 }

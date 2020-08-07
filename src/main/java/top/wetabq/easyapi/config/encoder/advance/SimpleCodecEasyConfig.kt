@@ -3,7 +3,7 @@ package top.wetabq.easyapi.config.encoder.advance
 import cn.nukkit.plugin.Plugin
 import com.google.gson.Gson
 import top.wetabq.easyapi.config.encoder.advance.internal.AdvanceConfigCodec
-import top.wetabq.easyapi.config.encoder.advance.internal.ReflectionConfigCodec
+import top.wetabq.easyapi.config.encoder.advance.internal.GsonCodec
 
 /*@Deprecated(
     message = "Too many problems, give up maintenance. Files may be overwritten or be filled with null, data is not safe",
@@ -14,9 +14,7 @@ abstract class SimpleCodecEasyConfig<T>(
     val plugin: Plugin,
     val clazzT: Class<T>,
     private val defaultValue: T,
-    private val codec: AdvanceConfigCodec<T> = ReflectionConfigCodec(
-        clazzT
-    )
+    private val codec: AdvanceConfigCodec<T> = GsonCodec(clazzT)
 ) : AdvanceCodecEasyConfig<T>(configName, plugin) {
 
     override fun encode(obj: T): LinkedHashMap<String, *> = codec.encode(obj)

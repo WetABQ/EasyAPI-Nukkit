@@ -16,6 +16,7 @@ import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule
 import top.wetabq.easyapi.placeholder.PlaceholderExpansion
 import top.wetabq.easyapi.placeholder.SimplePlaceholder
+import top.wetabq.easyapi.placeholder.getPlaceholderExpression
 import top.wetabq.easyapi.utils.color
 
 object ChatNameTagFormatModule : SimpleEasyAPIModule() {
@@ -48,17 +49,17 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
         ModuleVersion(1, 0, 2)
     )
 
-    fun getNameTagFormat(): String = chatConfig.getPath(NAME_TAG_FORMAT_PATH)
+    fun getNameTagFormat(): String = chatConfig.getPathValue(NAME_TAG_FORMAT_PATH).toString()
 
     fun setNameTagFormat(new: String) = chatConfig.setPathValue(SimpleConfigEntry(NAME_TAG_FORMAT_PATH, new))
 
-    fun getChatFormat(): String = chatConfig.getPath(CHAT_FORMAT_PATH)
+    fun getChatFormat(): String = chatConfig.getPathValue(CHAT_FORMAT_PATH).toString()
 
     fun setChatFormat(new: String) = chatConfig.setPathValue(SimpleConfigEntry(CHAT_FORMAT_PATH, new))
 
-    fun getRefreshNameTagPeriod(): Int = chatConfig.getPath(REFRESH_NAME_TAG_PERIOD_PATH).toInt()
+    fun getRefreshNameTagPeriod(): Int = (chatConfig.getPathValue(REFRESH_NAME_TAG_PERIOD_PATH).toString().toInt())
 
-    fun String.getPlaceholderExpression(): String = "%${PLACEHOLDER_IDENTIFIER}_$this%"
+    fun String.getPlaceholderExpression(): String = getPlaceholderExpression(PLACEHOLDER_IDENTIFIER)
 
     override fun moduleRegister() {
 
@@ -79,13 +80,23 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
                     when (identifier) {
                         PLACEHOLDER_NAMETAG -> PlaceholderAPI.setPlaceholder(player, nameTagFormat)
                         PLACEHOLDER_PLAYER_NAME -> player.name
-                        PLACEHOLDER_PERMISSION_PREFIX -> if (PermissionGroupAPI.compatibilityCheck.isCompatible()) PermissionGroupAPI.getFix(player.name)?:"" else ""
-                        PLACEHOLDER_PERMISSION_SUFFIX -> if (PermissionGroupAPI.compatibilityCheck.isCompatible()) PermissionGroupAPI.getFix(player.name, false)?:"" else ""
+                        PLACEHOLDER_PERMISSION_PREFIX -> {
+                            if (PermissionGroupAPI.compatibilityCheck.isCompatible()) {
+                                val fix = PermissionGroupAPI.getFix(player.name)?:""
+                                if (fix == " ") "" else fix
+                            } else ""
+                        }
+                        PLACEHOLDER_PERMISSION_SUFFIX -> {
+                            if (PermissionGroupAPI.compatibilityCheck.isCompatible()) {
+                                val fix = PermissionGroupAPI.getFix(player.name, false)?:""
+                                if(fix == " ") "" else fix
+                            } else ""
+                        }
                         else -> "&cNON EXIST PLACEHOLDER"
                     }
                 } else "NULL"
             },
-            placeholderDescription = hashMapOf(
+            placeholderDescription = linkedMapOf(
                 PLACEHOLDER_NAMETAG to "represents the player name tag which generate by EasyAPI",
                 PLACEHOLDER_PLAYER_NAME to "represents the player name",
                 PLACEHOLDER_PERMISSION_PREFIX to "represents the player permission group prefix",
