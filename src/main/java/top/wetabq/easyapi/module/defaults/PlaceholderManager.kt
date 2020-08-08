@@ -84,7 +84,7 @@ object PlaceholderManager : SimpleEasyAPIModule() {
                         "servername" -> player.level.server.name
                         "gamemode" -> player.gamemode.toString()
                         "direction" -> player.getCardinalDirection()
-                        "world" -> player.level.name
+                        "world" -> player.level.folderName
                         "x" -> player.x.toInt().toString()
                         "y" -> player.y.toInt().toString()
                         "z" -> player.z.toInt().toString()

@@ -42,7 +42,7 @@ class ConfigGUI<T>(
         simpleCodecEasyConfig.encode(obj).forEach { (elementName, value) ->
             var finalElement = elementName
             if (translatedMap.isNotEmpty()) finalElement = translatedMap[elementName] ?: elementName
-            if (finalElement != "%NONE%") {
+            if (finalElement != "%NONE%" && !simpleCodecEasyConfig.clazzT.getDeclaredField(elementName).isAnnotationPresent(IgnoreElement::class.java)) {
                 if (value is Boolean) {
                     addElement(ElementToggle(finalElement, value))
                 } else {
@@ -82,7 +82,8 @@ class ConfigGUI<T>(
                     arrayParam.add(1)
                     arrayParam.add(null)
                 }
-                val newDataObj = clazz.constructors[0].newInstance(*arrayParam.toArray()) as T
+
+                val newDataObj = clazz.constructors[0].newInstance(*autoNumberType(arrayParam, clazz.constructors[0].parameterTypes)) as T
                 if (id is String) {
                     player.sendMessage("&e${simpleCodecEasyConfig.plugin.name} > &aSave successfully".color())
                     simpleCodecEasyConfig.simpleConfig[id] = newDataObj
@@ -108,6 +109,28 @@ class ConfigGUI<T>(
             value.contains(Regex("""^[+-]?\d+""")) -> value.toInt()
             else -> value
         }
+    }
+
+    private fun autoNumberType(arrayParam: ArrayList<Any?>, constructorArray: Array<Class<*>>): Array<Any?> {
+        val finalArrayParam = arrayListOf<Any?>()
+        arrayParam.forEachIndexed { index, p ->
+            if (p is Int) {
+                if (constructorArray[index].name.toLowerCase().contains("double")) {
+                    finalArrayParam.add(p.toDouble())
+                } else {
+                    finalArrayParam.add(p)
+                }
+            } else if (p is Double) {
+                if (constructorArray[index].name.toLowerCase().contains("int")) {
+                    finalArrayParam.add(p.toInt())
+                } else {
+                    finalArrayParam.add(p)
+                }
+            } else {
+                finalArrayParam.add(p)
+            }
+        }
+        return finalArrayParam.toArray()
     }
 
 }
