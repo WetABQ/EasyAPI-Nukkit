@@ -4,6 +4,7 @@ import cn.nukkit.Player
 import cn.nukkit.command.CommandSender
 import cn.nukkit.command.data.CommandParameter
 import cn.nukkit.utils.TextFormat
+import com.udojava.evalex.Expression
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.defaults.CommandAPI
 import top.wetabq.easyapi.command.EasyCommand
@@ -16,7 +17,9 @@ import top.wetabq.easyapi.placeholder.PlaceholderExpansion
 import top.wetabq.easyapi.placeholder.SimplePlaceholder
 import top.wetabq.easyapi.utils.color
 import top.wetabq.easyapi.utils.getCardinalDirection
+import java.math.BigDecimal
 import java.util.concurrent.ConcurrentHashMap
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.math.roundToInt
 
@@ -31,6 +34,7 @@ object PlaceholderManager : SimpleEasyAPIModule() {
     const val MATH_PLACEHOLDER_IDENTIFIER = "math"
 
     lateinit var playerPlaceholderExpansion: PlaceholderExpansion
+    lateinit var mathPlaceholderExpansion: PlaceholderExpansion
 
     private val placeholderExpansions = ConcurrentHashMap<String, PlaceholderExpansion>()
     private val expansionPattern = ConcurrentHashMap<String, Pattern>()
@@ -133,6 +137,47 @@ object PlaceholderManager : SimpleEasyAPIModule() {
                 "speed" to "speed",
                 "world_time" to "world time"
             )
+        ).register()
+
+        mathPlaceholderExpansion = SimplePlaceholder(
+            owner = this,
+            identifier = MATH_PLACEHOLDER_IDENTIFIER,
+            onRequestFunc = { _, identifier ->
+
+                var final = identifier.replace("[prc]", "%")
+                val pattern = Pattern.compile("\\[(?<precision>[a-zA-Z0-9:]+)]")
+                val matcher: Matcher = pattern.matcher(identifier)
+
+                var precision = -1
+
+                if (matcher.find()){
+                    val results = matcher.group("precision").split(":".toRegex()).toTypedArray()
+                    if (results.size >= 2 && results[0] == "precision") try {
+                        precision = Integer.parseInt(results[1])
+                        final = final.replace("[" + matcher.group("precision") + "]", "")
+                    } catch (exception : Exception){
+                        final = " \"Precision\" is not a number!"
+                    } else final = "Invalid option-type : ${matcher.group(precision)} ."
+                }
+
+                try {
+                    val expression = Expression(identifier)
+                    val result = expression.eval().setScale(
+                        if (precision == -1) 2 else precision,
+                        BigDecimal.ROUND_HALF_UP
+                    )
+                    result?.let { final = it.toPlainString() }
+                } catch (exception: Exception) {
+                    final = """
+                        The provided value was invalid!
+                        Reason: ${exception.message}
+                        """.trimIndent()
+                }
+
+
+                final
+            }
+
         ).register()
 
         this.registerAPI(PLACEHOLDER_COMMAND, CommandAPI())
