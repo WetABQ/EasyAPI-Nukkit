@@ -7,13 +7,7 @@
  * https://github.com/WetABQ/EasyAPI-Nukkit/blob/master/LICENSE
  */
 
-package top.wetabq.easyapi.module
+package top.wetabq.easyapi.screen.animation
 
-import cn.nukkit.plugin.Plugin
-
-data class ModuleInfo (
-    val moduleOwner: Plugin,
-    val name: String,
-    val author: String,
-    val moduleVersion: ModuleVersion
-)
+interface TextAnimation {
+}

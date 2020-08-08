@@ -1,5 +1,15 @@
+/*
+ * Copyright (c) 2020 WetABQ and contributors
+ *
+ *  此源代码的使用受 GNU GENERAL PUBLIC LICENSE version 3 许可证的约束, 可以在以下链接找到该许可证.
+ * Use of this source code is governed by the GNU GPLv3 license that can be found through the following link.
+ *
+ * https://github.com/WetABQ/EasyAPI-Nukkit/blob/master/LICENSE
+ */
+
 package top.wetabq.easyapi.utils
 
+import cn.nukkit.Server
 import cn.nukkit.plugin.Plugin
 import cn.nukkit.utils.Config
 import com.google.common.base.Preconditions
@@ -17,62 +27,77 @@ import javax.net.ssl.HttpsURLConnection
 
 class MerticsLite(var plugin: Plugin) {
 
-    // Is bStats enabled on this server?
-    private var enabled = false
+    companion object {
+        @JvmStatic
+        var enabled = false
 
-    // Should failed requests be logged?
-    private var logFailedRequests = false
+        // Should failed requests be logged?
+        @JvmStatic
+        var logFailedRequests = false
 
-    // Should the sent data be logged?
-    private var logSentData = false
+        // Should the sent data be logged?
+        @JvmStatic
+        var logSentData = false
 
-    // Should the response text be logged?
-    private var logResponseStatusText = false
+        // Should the response text be logged?
+        @JvmStatic
+        var logResponseStatusText = false
 
-    // The uuid of the server
-    private var serverUUID: String? = null
+        // The uuid of the server
+        @JvmStatic
+        var serverUUID: String? = null
+
+        // The version of this bStats class
+        const val B_STATS_VERSION = 1
+
+        // The url to which the data is sent
+        private const val URL = "https://bStats.org/submitData/bukkit"
+
+        init {
+            // Get the config file
+            val bStatsFolder = File(Server.getInstance().pluginPath, "bStats")
+            val configFile = File(bStatsFolder, "config.yml")
+            val config = Config(configFile)
+            // Check the config
+            val map = config.all as LinkedHashMap<String, Any>
+            // Every server gets it's unique random id.
+            if (!config.isString("serverUuid")) {
+                map["serverUuid"] = UUID.randomUUID().toString()
+            } else {
+                try { // Check the UUID
+                    UUID.fromString(config.getString("serverUuid"))
+                } catch (ignored: Exception) {
+                    map["serverUuid"] = UUID.randomUUID().toString()
+                }
+            }
+            // Add default values
+            if (!config.isBoolean("enabled")) {
+                map["enabled"] = true
+            }
+            // Should failed request be logged?
+            if (!config.isBoolean("logFailedRequests")) {
+                map["logFailedRequests"] = false
+            }
+            // Should the sent data be logged?
+            if (!config.isBoolean("logSentData")) {
+                map["logSentData"] = false
+            }
+            // Should the response text be logged?
+            if (!config.isBoolean("logResponseStatusText")) {
+                map["logResponseStatusText"] = false
+            }
+            config.setAll(map)
+            config.save()
+            // Load the data
+            enabled = config.getBoolean("enabled", true)
+            serverUUID = config.getString("serverUuid")
+            logFailedRequests = config.getBoolean("logFailedRequests", false)
+            logSentData = config.getBoolean("logSentData", false)
+            logResponseStatusText = config.getBoolean("logResponseStatusText", false)
+        }
+    }
 
     init {
-        // Get the config file
-        val bStatsFolder = File(plugin.dataFolder.parentFile, "bStats")
-        val configFile = File(bStatsFolder, "config.yml")
-        val config = Config(configFile)
-        // Check the config
-        val map = config.all as LinkedHashMap<String, Any>
-        // Every server gets it's unique random id.
-        if (!config.isString("serverUuid")) {
-            map["serverUuid"] = UUID.randomUUID().toString()
-        } else {
-            try { // Check the UUID
-                UUID.fromString(config.getString("serverUuid"))
-            } catch (ignored: Exception) {
-                map["serverUuid"] = UUID.randomUUID().toString()
-            }
-        }
-        // Add default values
-        if (!config.isBoolean("enabled")) {
-            map["enabled"] = true
-        }
-        // Should failed request be logged?
-        if (!config.isBoolean("logFailedRequests")) {
-            map["logFailedRequests"] = false
-        }
-        // Should the sent data be logged?
-        if (!config.isBoolean("logSentData")) {
-            map["logSentData"] = false
-        }
-        // Should the response text be logged?
-        if (!config.isBoolean("logResponseStatusText")) {
-            map["logResponseStatusText"] = false
-        }
-        config.setAll(map)
-        config.save()
-        // Load the data
-        enabled = config.getBoolean("enabled", true)
-        serverUUID = config.getString("serverUuid")
-        logFailedRequests = config.getBoolean("logFailedRequests", false)
-        logSentData = config.getBoolean("logSentData", false)
-        logResponseStatusText = config.getBoolean("logResponseStatusText", false)
         if (enabled) {
             SimplePluginTaskAPI.delayRepeating(20 * 60 * 5, 20 * 60 * 30) { task, _ ->
                 if (!plugin.isEnabled) { // Plugin was disabled
@@ -210,16 +235,6 @@ class MerticsLite(var plugin: Plugin) {
         val outputStream = ByteArrayOutputStream()
         GZIPOutputStream(outputStream).use { gzip -> gzip.write(str.toByteArray(StandardCharsets.UTF_8)) }
         return outputStream.toByteArray()
-    }
-
-    companion object {
-
-        // The version of this bStats class
-        const val B_STATS_VERSION = 1
-
-        // The url to which the data is sent
-        private const val URL = "https://bStats.org/submitData/bukkit"
-
     }
 
 
