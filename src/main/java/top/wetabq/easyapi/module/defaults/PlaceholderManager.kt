@@ -1,12 +1,3 @@
-/*
- * Copyright (c) 2020 WetABQ and contributors
- *
- *  此源代码的使用受 GNU GENERAL PUBLIC LICENSE version 3 许可证的约束, 可以在以下链接找到该许可证.
- * Use of this source code is governed by the GNU GPLv3 license that can be found through the following link.
- *
- * https://github.com/WetABQ/EasyAPI-Nukkit/blob/master/LICENSE
- */
-
 package top.wetabq.easyapi.module.defaults
 
 import cn.nukkit.AdventureSettings
@@ -14,6 +5,7 @@ import cn.nukkit.Player
 import cn.nukkit.command.CommandSender
 import cn.nukkit.command.data.CommandParameter
 import cn.nukkit.utils.TextFormat
+import com.udojava.evalex.Expression
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.defaults.CommandAPI
 import top.wetabq.easyapi.api.defaults.EconomyAPI
@@ -29,7 +21,9 @@ import top.wetabq.easyapi.utils.color
 import top.wetabq.easyapi.utils.getCardinalDirection
 import top.wetabq.easyapi.utils.getHealthPopupString
 import java.util.*
+import java.math.BigDecimal
 import java.util.concurrent.ConcurrentHashMap
+import java.util.regex.Matcher
 import java.util.regex.Pattern
 import kotlin.math.roundToInt
 
@@ -47,6 +41,7 @@ object PlaceholderManager : SimpleEasyAPIModule() {
     const val MATH_PLACEHOLDER_IDENTIFIER = "math"
 
     lateinit var playerPlaceholderExpansion: PlaceholderExpansion
+    lateinit var mathPlaceholderExpansion: PlaceholderExpansion
     lateinit var serverPlaceholderExpansion: PlaceholderExpansion
     lateinit var runtimePlaceholderExpansion: PlaceholderExpansion
     lateinit var datePlaceholderExpansion: PlaceholderExpansion
@@ -247,6 +242,47 @@ object PlaceholderManager : SimpleEasyAPIModule() {
                 "minute" to "minute",
                 "second" to "second"
             )
+        ).register()
+
+        mathPlaceholderExpansion = SimplePlaceholder(
+            owner = this,
+            identifier = MATH_PLACEHOLDER_IDENTIFIER,
+            onRequestFunc = { _, identifier ->
+
+                var final = identifier.replace("[prc]", "%")
+                val pattern = Pattern.compile("\\[(?<precision>[a-zA-Z0-9:]+)]")
+                val matcher: Matcher = pattern.matcher(identifier)
+
+                var precision = -1
+
+                if (matcher.find()){
+                    val results = matcher.group("precision").split(":".toRegex()).toTypedArray()
+                    if (results.size >= 2 && results[0] == "precision") try {
+                        precision = Integer.parseInt(results[1])
+                        final = final.replace("[" + matcher.group("precision") + "]", "")
+                    } catch (exception : Exception){
+                        final = " \"Precision\" is not a number!"
+                    } else final = "Invalid option-type : ${matcher.group(precision)} ."
+                }
+
+                try {
+                    val expression = Expression(identifier)
+                    val result = expression.eval().setScale(
+                        if (precision == -1) 2 else precision,
+                        BigDecimal.ROUND_HALF_UP
+                    )
+                    result?.let { final = it.toPlainString() }
+                } catch (exception: Exception) {
+                    final = """
+                        The provided value was invalid!
+                        Reason: ${exception.message}
+                        """.trimIndent()
+                }
+
+
+                final
+            }
+
         ).register()
 
         this.registerAPI(PLACEHOLDER_COMMAND, CommandAPI())
