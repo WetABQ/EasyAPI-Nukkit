@@ -1,7 +1,15 @@
+/*
+ * Copyright (c) 2020 WetABQ and contributors
+ *
+ *  此源代码的使用受 GNU GENERAL PUBLIC LICENSE version 3 许可证的约束, 可以在以下链接找到该许可证.
+ * Use of this source code is governed by the GNU GPLv3 license that can be found through the following link.
+ *
+ * https://github.com/WetABQ/EasyAPI-Nukkit/blob/master/LICENSE
+ */
+
 package top.wetabq.easyapi.module.defaults
 
 import cn.nukkit.Player
-import cn.nukkit.Server
 import cn.nukkit.event.EventHandler
 import cn.nukkit.event.Listener
 import cn.nukkit.event.player.PlayerChatEvent
@@ -15,6 +23,9 @@ import top.wetabq.easyapi.config.defaults.SimpleConfigEntry
 import top.wetabq.easyapi.module.ModuleInfo
 import top.wetabq.easyapi.module.ModuleVersion
 import top.wetabq.easyapi.module.SimpleEasyAPIModule
+import top.wetabq.easyapi.placeholder.PlaceholderExpansion
+import top.wetabq.easyapi.placeholder.SimplePlaceholder
+import top.wetabq.easyapi.placeholder.getPlaceholderExpression
 import top.wetabq.easyapi.utils.color
 
 object ChatNameTagFormatModule : SimpleEasyAPIModule() {
@@ -29,16 +40,16 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
     const val CHAT_FORMAT_PATH = "chatFormat"
     const val REFRESH_NAME_TAG_PERIOD_PATH = "refreshNameTagPeriod"
 
-    const val EASY_NAME_TAG_PLACEHOLDER = "%easy_nametag%"
-    const val PLAYER_NAME_PLACEHOLDER = "%player_name%"
-    const val CHAT_MESSAGE_PLACEHOLDER = "%chat_message%"
-    const val PERMISSION_GROUP_PREFIX_PLACEHOLDER = "%permission_group_prefix%"
-    const val PERMISSION_GROUP_SUFFIX_PLACEHOLDER = "%permission_group_suffix%"
+    const val PLACEHOLDER_IDENTIFIER = "chatnametag"
+    const val PLACEHOLDER_NAMETAG = "nametag"
+    const val PLACEHOLDER_PLAYER_NAME = "player_name"
+    const val PLACEHOLDER_CHAT_MESSAGE = "%message%"
+    const val PLACEHOLDER_PERMISSION_PREFIX = "permission_prefix"
+    const val PLACEHOLDER_PERMISSION_SUFFIX = "permission_suffix"
 
-    const val NAME_TAG_FORMATTER = "nameTagFormatter"
-    const val CHAT_FORMATTER = "chatFormatter"
-
+    lateinit var chatConfig: SimpleConfigAPI
     lateinit var nameTagChangeTask: PluginTask<*>
+    lateinit var chatNameTagPlaceholderExpansion: PlaceholderExpansion
 
     override fun getModuleInfo(): ModuleInfo = ModuleInfo(
         EasyAPI.INSTANCE,
@@ -47,17 +58,65 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
         ModuleVersion(1, 0, 2)
     )
 
+    fun getNameTagFormat(): String = chatConfig.getPathValue(NAME_TAG_FORMAT_PATH).toString()
+
+    fun setNameTagFormat(new: String) = chatConfig.setPathValue(SimpleConfigEntry(NAME_TAG_FORMAT_PATH, new))
+
+    fun getChatFormat(): String = chatConfig.getPathValue(CHAT_FORMAT_PATH).toString()
+
+    fun setChatFormat(new: String) = chatConfig.setPathValue(SimpleConfigEntry(CHAT_FORMAT_PATH, new))
+
+    fun getRefreshNameTagPeriod(): Int = (chatConfig.getPathValue(REFRESH_NAME_TAG_PERIOD_PATH).toString().toInt())
+
+    fun String.getPlaceholderExpression(): String = getPlaceholderExpression(PLACEHOLDER_IDENTIFIER)
+
     override fun moduleRegister() {
-        val chatConfig = this.registerAPI(CHAT_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
-            .add(SimpleConfigEntry(NAME_TAG_FORMAT_PATH, "$PERMISSION_GROUP_PREFIX_PLACEHOLDER &r&e$PLAYER_NAME_PLACEHOLDER&r $PERMISSION_GROUP_SUFFIX_PLACEHOLDER"))
-            .add(SimpleConfigEntry(CHAT_FORMAT_PATH, "$EASY_NAME_TAG_PLACEHOLDER &r&c≫&r &7$CHAT_MESSAGE_PLACEHOLDER"))
+
+        chatConfig = this.registerAPI(CHAT_CONFIG, SimpleConfigAPI(this.getModuleInfo().moduleOwner))
+            .add(SimpleConfigEntry(NAME_TAG_FORMAT_PATH, "${PLACEHOLDER_PERMISSION_PREFIX.getPlaceholderExpression()}&r&e${PLACEHOLDER_PLAYER_NAME.getPlaceholderExpression()}&r${PLACEHOLDER_PERMISSION_SUFFIX.getPlaceholderExpression()}"))
+            .add(SimpleConfigEntry(CHAT_FORMAT_PATH, "${PLACEHOLDER_NAMETAG.getPlaceholderExpression()} &r&c≫&r &7$PLACEHOLDER_CHAT_MESSAGE"))
             .add(SimpleConfigEntry(REFRESH_NAME_TAG_PERIOD_PATH, 20))
 
-        val nameTagFormat = chatConfig.getPathValue(NAME_TAG_FORMAT_PATH) as String
-        val chatFormat = chatConfig.getPathValue(CHAT_FORMAT_PATH) as String
-        val refreshNameTagPeriod = chatConfig.getPathValue(REFRESH_NAME_TAG_PERIOD_PATH).toString().toInt()
+        val nameTagFormat = getNameTagFormat()
+        val chatFormat = getChatFormat()
+        val refreshNameTagPeriod = getRefreshNameTagPeriod()
 
-        val nameTagFormatter = object : MessageFormatter<String> {
+        chatNameTagPlaceholderExpansion = SimplePlaceholder(
+            owner = this,
+            identifier = PLACEHOLDER_IDENTIFIER,
+            onRequestFunc = { player, identifier ->
+                if (player is Player) {
+                    when (identifier) {
+                        PLACEHOLDER_NAMETAG -> PlaceholderAPI.setPlaceholder(player, nameTagFormat)
+                        PLACEHOLDER_PLAYER_NAME -> player.name
+                        PLACEHOLDER_PERMISSION_PREFIX -> {
+                            if (PermissionGroupAPI.compatibilityCheck.isCompatible()) {
+                                val fix = PermissionGroupAPI.getFix(player.name)?:""
+                                if (fix == " ") "" else fix
+                            } else ""
+                        }
+                        PLACEHOLDER_PERMISSION_SUFFIX -> {
+                            if (PermissionGroupAPI.compatibilityCheck.isCompatible()) {
+                                val fix = PermissionGroupAPI.getFix(player.name, false)?:""
+                                if(fix == " ") "" else fix
+                            } else ""
+                        }
+                        else -> "&cNON EXIST PLACEHOLDER"
+                    }
+                } else "NULL"
+            },
+            placeholderDescription = linkedMapOf(
+                PLACEHOLDER_NAMETAG to "represents the player name tag which generate by EasyAPI",
+                PLACEHOLDER_PLAYER_NAME to "represents the player name",
+                PLACEHOLDER_PERMISSION_PREFIX to "represents the player permission group prefix",
+                PLACEHOLDER_PERMISSION_SUFFIX to "represents the player permission group suffix"
+            )
+        ).register()
+
+
+
+
+        /*val nameTagFormatter = object : MessageFormatter<String> {
             override fun format(message: String, data: String): String {
                 //IF data IS PLAYER NAME
                 var final = message
@@ -66,12 +125,12 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
                         final = final.replace(EASY_NAME_TAG_PLACEHOLDER, nameTagFormat)
                     }
                     final = final.replace(PLAYER_NAME_PLACEHOLDER, data)
-                    if (PermissionGroupAPI.compatibilityCheck.isCompatible()) {
-                        final = final
+                    final = if (PermissionGroupAPI.compatibilityCheck.isCompatible()) {
+                        final
                             .replace(PERMISSION_GROUP_PREFIX_PLACEHOLDER, PermissionGroupAPI.getFix(data) ?: "")
                             .replace(PERMISSION_GROUP_SUFFIX_PLACEHOLDER, PermissionGroupAPI.getFix(data, false) ?: "")
                     } else {
-                        final = final.replace(PERMISSION_GROUP_PREFIX_PLACEHOLDER, "").replace(PERMISSION_GROUP_SUFFIX_PLACEHOLDER, "")
+                        final.replace(PERMISSION_GROUP_PREFIX_PLACEHOLDER, "").replace(PERMISSION_GROUP_SUFFIX_PLACEHOLDER, "")
                     }
                 }
                 return final
@@ -83,35 +142,29 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
         }
 
         MessageFormatAPI.registerFormatter(NAME_TAG_FORMATTER, String::class.java, nameTagFormatter)
-        MessageFormatAPI.registerFormatter(CHAT_FORMATTER, PlayerChatEvent::class.java, chatFormatter)
+        MessageFormatAPI.registerFormatter(CHAT_FORMATTER, PlayerChatEvent::class.java, chatFormatter)*/
 
         this.registerAPI(CHAT_LISTENER, NukkitListenerAPI(this.getModuleInfo().moduleOwner))
             .add(object: Listener {
 
                 @EventHandler
                 fun onChatEvent(event: PlayerChatEvent) {
-                    event.format = MessageFormatAPI.format(chatFormat, event).color()
+                    event.format = PlaceholderAPI.setPlaceholder(event.player, chatFormat).replace(PLACEHOLDER_CHAT_MESSAGE, event.message).color()
                 }
 
                 @EventHandler
                 fun onJoinEvent(event: PlayerJoinEvent) {
-                    asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
-                        event.player.nameTag = MessageFormatAPI.format(nameTagFormat.color(), event.player.name)
-                    }
+                    event.player.nameTag = PlaceholderAPI.setPlaceholder(event.player, nameTagFormat)
                 }
 
                 @EventHandler
                 fun onRespawnEvent(event: PlayerRespawnEvent) {
-                    asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
-                        event.player.nameTag = MessageFormatAPI.format(nameTagFormat.color(), event.player.name)
-                    }
+                    event.player.nameTag = PlaceholderAPI.setPlaceholder(event.player, nameTagFormat)
                 }
 
                 @EventHandler
                 fun onDeathEvent(event: PlayerDeathEvent) {
-                    asyncTaskCallEvent(event, getModuleInfo().moduleOwner) {
-                        event.entity.nameTag = MessageFormatAPI.format(nameTagFormat.color(), event.entity.name)
-                    }
+                    event.entity.nameTag = PlaceholderAPI.setPlaceholder(event.entity, nameTagFormat)
                 }
 
             })
@@ -120,7 +173,7 @@ object ChatNameTagFormatModule : SimpleEasyAPIModule() {
 
         nameTagChangeTask = SimplePluginTaskAPI.repeating(refreshNameTagPeriod) { _, _ ->
             getModuleInfo().moduleOwner.server.onlinePlayers.values.forEach { player ->
-                if (player.isAlive) player.nameTag = MessageFormatAPI.format(nameTagFormat.color(), player.name)
+                if (player.isAlive) player.nameTag = PlaceholderAPI.setPlaceholder(player, nameTagFormat)
             }
         }
 

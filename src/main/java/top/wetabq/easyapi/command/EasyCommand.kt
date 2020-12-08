@@ -1,3 +1,12 @@
+/*
+ * Copyright (c) 2020 WetABQ and contributors
+ *
+ *  此源代码的使用受 GNU GENERAL PUBLIC LICENSE version 3 许可证的约束, 可以在以下链接找到该许可证.
+ * Use of this source code is governed by the GNU GPLv3 license that can be found through the following link.
+ *
+ * https://github.com/WetABQ/EasyAPI-Nukkit/blob/master/LICENSE
+ */
+
 package top.wetabq.easyapi.command
 
 import cn.nukkit.command.Command
@@ -82,7 +91,7 @@ abstract class EasyCommand(private val command: String, description: String = "E
     // /eapi xxxx <argName: argType> [argName: argType]
 
     open fun sendHelp(sender: CommandSender) {
-        sender.sendMessage(TextFormat.GOLD.toString() + "------Help------")
+        sender.sendMessage("${TextFormat.GOLD}------Help------")
         subCommand.forEach { sc ->
             var str = StringBuilder()
             sc.getAliases()?.forEach {aliases -> str.append("$aliases|") }
