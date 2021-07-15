@@ -11,7 +11,6 @@ package top.wetabq.easyapi.module.defaults
 
 import cn.nukkit.Player
 import cn.nukkit.scheduler.PluginTask
-import cn.nukkit.utils.TextFormat
 import top.wetabq.easyapi.EasyAPI
 import top.wetabq.easyapi.api.defaults.PluginTaskAPI
 import top.wetabq.easyapi.module.ModuleInfo
@@ -21,7 +20,6 @@ import top.wetabq.easyapi.screen.ScreenShow
 import top.wetabq.easyapi.screen.ShowType
 import top.wetabq.easyapi.task.PluginTaskEntry
 import top.wetabq.easyapi.utils.color
-import kotlin.math.floor
 
 object ScreenShowModule : SimpleEasyAPIModule() {
 
@@ -58,9 +56,7 @@ object ScreenShowModule : SimpleEasyAPIModule() {
                         sendAll()
                     }
 
-                },
-                5
-                ))
+                }, 5))
     }
 
     override fun moduleDisable() {
@@ -68,24 +64,7 @@ object ScreenShowModule : SimpleEasyAPIModule() {
         alternateList.clear()
     }
 
-    /*
-    exclusive alternative |
-    alternative |
-    exclusive alternative |
-    alternative |
-    exclusive -
-    alternative |
-    alternative |
-    ----------
-    all false +
-    alternative + |
-    exclusive |
-    exclusive alternative
-     */
 
-    /*
-    目前来说，低优先级并且没有启用 alternative 的 tip 很容易被比其高优先级的 always tip 挡住以至于一直不显示
-     */
     @Suppress("UNCHECKED_CAST")
     fun sendAll() {
         val cacheTip = hashMapOf<Player, StringBuilder>()
@@ -99,27 +78,9 @@ object ScreenShowModule : SimpleEasyAPIModule() {
             val nextLine = if (screenShow.exclusive) "" else "\n&r".color()
             if (screenShow.sendTime == -1L) {
                 screenShow.sendTime = System.currentTimeMillis()
-                if (screenShow.showType == ShowType.POPUP) addToCache(
-                    cachePopup,
-                    screenShow.targetPlayers,
-                    screenShow.showMessage + nextLine
-                )
-                else if (screenShow.showType == ShowType.TIP) addToCache(
-                    cacheTip,
-                    screenShow.targetPlayers,
-                    screenShow.showMessage + nextLine
-                )
+                addToCache(if (screenShow.showType == ShowType.POPUP) cachePopup else cacheTip, screenShow.targetPlayers, screenShow.showMessage + nextLine)
             } else if (screenShow.sendTime + screenShow.durationTime >= System.currentTimeMillis() || screenShow.durationTime == -1) {
-                if (screenShow.showType == ShowType.POPUP) addToCache(
-                    cachePopup,
-                    screenShow.targetPlayers,
-                    screenShow.showMessage + nextLine
-                )
-                else if (screenShow.showType == ShowType.TIP) addToCache(
-                    cacheTip,
-                    screenShow.targetPlayers,
-                    screenShow.showMessage + nextLine
-                )
+                addToCache(if (screenShow.showType == ShowType.POPUP) cachePopup else cacheTip, screenShow.targetPlayers, screenShow.showMessage + nextLine)
             } else if (screenShow.sendTime + screenShow.durationTime < System.currentTimeMillis() && screenShow.durationTime != -1) {
                 screenShowList.remove(screenShow)
             }

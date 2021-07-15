@@ -10,4 +10,12 @@
 package top.wetabq.easyapi.screen.animation
 
 interface TextAnimation {
+
+    fun nextFrame(): String
+
+    fun getTick(): Int
+
+    fun getInterval(): Int
+
+
 }

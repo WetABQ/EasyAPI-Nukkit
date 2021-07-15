@@ -15,9 +15,9 @@ import top.wetabq.easyapi.module.IEasyAPIModule
 class SimplePlaceholder(
     private val owner: IEasyAPIModule,
     private val identifier: String,
-    private val onRequestFunc: (Player?, String) -> String?,
+    private inline val onRequestFunc: (Player?, String) -> String?,
     private val placeholderDescription: LinkedHashMap<String, String> = linkedMapOf(),
-    private val canRegisterFunc: () -> Boolean = {true}
+    private inline val canRegisterFunc: () -> Boolean = {true}
 ): AbstractPlaceholderExpansion() {
 
     override fun canRegister(): Boolean = canRegisterFunc()
