@@ -51,7 +51,10 @@
     <dependencies>
         <!--
         if you can't load dependency, try to enter below commands
-        cd lib && mvn install:install-file -Dfile=gui.jar -DgroupId=moe.him188 -DartifactId=gui -Dversion=1.14 -Dpackaging=jar && mvn install:install-file -Dfile=Multipass-1.1.3.jar -DgroupId=ru.nukkit.multipass -DartifactId=Multipass -Dversion=1.1.3 -Dpackaging=jar
+        cd lib &&
+        mvn install:install-file -Dfile=gui.jar -DgroupId=moe.him188 -DartifactId=gui -Dversion=1.14 -Dpackaging=jar &&
+        mvn install:install-file -Dfile=Multipass-1.1.3.jar -DgroupId=ru.nukkit.multipass -DartifactId=Multipass -Dversion=1.1.3 -Dpackaging=jar &&
+        mvn install:install-file -Dfile=ScoreboardAPI-1.3.jar -DgroupId=de.theamychan -DartifactId=ScoreboardAPI -Dversion=1.3 -Dpackaging=jar
         -->
         <dependency>
             <groupId>de.theamychan</groupId>
