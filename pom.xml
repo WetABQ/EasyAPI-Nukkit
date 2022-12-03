@@ -29,8 +29,8 @@
 
     <repositories>
         <repository>
-            <id>nukkit-repo</id>
-            <url>https://repo.nukkitx.com/maven-snapshots</url>
+            <id>opencollab-repo-snapshot</id>
+            <url>https://repo.opencollab.dev/maven-snapshots/</url>
         </repository>
         <repository>
             <id>kotlinx-repo</id>
@@ -44,7 +44,7 @@
     </repositories>
 
     <properties>
-        <kotlin.version>1.5.21</kotlin.version>
+        <kotlin.version>1.7.21</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
     </properties>
 
@@ -56,24 +56,24 @@
         mvn install:install-file -Dfile=Multipass-1.1.3.jar -DgroupId=ru.nukkit.multipass -DartifactId=Multipass -Dversion=1.1.3 -Dpackaging=jar &&
         mvn install:install-file -Dfile=ScoreboardAPI-1.3.jar -DgroupId=de.theamychan -DartifactId=ScoreboardAPI -Dversion=1.3 -Dpackaging=jar
         -->
-        <dependency>
-            <groupId>de.theamychan</groupId>
-            <artifactId>ScoreboardAPI</artifactId>
-            <version>1.3</version>
-            <scope>provided</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>de.theamychan</groupId>-->
+<!--            <artifactId>ScoreboardAPI</artifactId>-->
+<!--            <version>1.3</version>-->
+<!--            <scope>provided</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.fundebug</groupId>
             <artifactId>fundebug-java</artifactId>
             <version>0.3.1</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20080701</version>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.json</groupId>-->
+<!--            <artifactId>json</artifactId>-->
+<!--            <version>20080701</version>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>ru.nukkit.multipass</groupId>
             <artifactId>Multipass</artifactId>
